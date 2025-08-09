@@ -2,7 +2,7 @@ spring:
   application:
     name: auth-service
   config:
-    import: optional:.env[.properties]
+    import: optional:file:.env[.properties]
   datasource:
     driver-class-name: org.postgresql.Driver
     password: postgres

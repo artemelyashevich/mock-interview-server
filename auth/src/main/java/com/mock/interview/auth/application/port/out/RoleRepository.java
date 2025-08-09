@@ -10,6 +10,8 @@ public interface RoleRepository {
 
   List<RoleModel> findAll();
 
+  boolean existsByName(String name);
+
   RoleModel save(RoleModel roleModel);
 
   void delete(RoleModel roleModel);

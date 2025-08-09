@@ -21,7 +21,7 @@ public class UserTestDataFactory {
   ) {
     return UserEntity.builder()
             .id(id)
-            .email(email)
+            .login(email)
             .passwordHash(passwordHash)
             .isActive(isActive)
             .createdAt(createdAt)
@@ -41,7 +41,7 @@ public class UserTestDataFactory {
   ) {
     return UserModel.builder()
             .id(id)
-            .email(email)
+            .login(email)
             .passwordHash(passwordHash)
             .isActive(isActive)
             .createdAt(createdAt)

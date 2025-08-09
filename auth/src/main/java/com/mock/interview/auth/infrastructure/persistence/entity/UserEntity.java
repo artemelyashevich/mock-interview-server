@@ -42,7 +42,7 @@ public class UserEntity extends AbstractEntity implements Serializable {
   private Long id;
 
   @Column(nullable = false, unique = true)
-  private String email;
+  private String login;
 
   @Column(name = "password_hash", nullable = false)
   private String passwordHash;

@@ -35,7 +35,12 @@ public class RoleRepositoryAdapter implements RoleRepository {
     return roleEntityMapper.toModels(roleRepository.findAll());
   }
 
-  @Override
+    @Override
+    public boolean existsByName(String name) {
+        return roleRepository.existsByName(name);
+    }
+
+    @Override
   public RoleModel save(RoleModel roleModel) {
     return roleEntityMapper.toModel(
             roleRepository.save(

@@ -3,7 +3,6 @@ package com.mock.interview.auth.factory;
 import com.mock.interview.auth.infrastructure.persistence.entity.RoleEntity;
 import com.mock.interview.auth.infrastructure.persistence.entity.UserEntity;
 import com.mock.interview.lib.model.RoleModel;
-import com.mock.interview.lib.model.UserModel;
 
 import java.util.Set;
 

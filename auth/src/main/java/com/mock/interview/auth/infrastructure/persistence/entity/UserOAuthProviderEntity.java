@@ -22,7 +22,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-
 @Entity
 @Table(name = "user_oauth_providers")
 @Getter

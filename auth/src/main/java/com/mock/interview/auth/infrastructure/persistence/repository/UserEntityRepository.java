@@ -8,8 +8,8 @@ import java.util.Optional;
 
 public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
 
-  Optional<UserEntity> findByEmail(String email);
+  Optional<UserEntity> findByLogin(String login);
 
-  @Query("select (count(u) > 0) from UserEntity u where u.email = :email")
-  boolean existsByEmail(String email);
+  @Query("select (count(u) > 0) from UserEntity u where u.login = :login")
+  boolean existsByLogin(String login);
 }

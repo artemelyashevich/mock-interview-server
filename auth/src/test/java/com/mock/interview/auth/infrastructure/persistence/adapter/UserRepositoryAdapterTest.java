@@ -1,7 +1,6 @@
 package com.mock.interview.auth.infrastructure.persistence.adapter;
 
 import com.mock.interview.auth.factory.UserTestDataFactory;
-import com.mock.interview.auth.infrastructure.persistence.entity.UserEntity;
 import com.mock.interview.auth.infrastructure.persistence.mapper.UserEntityMapper;
 import com.mock.interview.auth.infrastructure.persistence.repository.UserEntityRepository;
 import com.mock.interview.lib.exception.ResourceNotFoundException;
@@ -11,15 +10,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
-import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("UserRepositoryAdapter Unit Tests")
@@ -53,18 +56,18 @@ class UserRepositoryAdapterTest {
 
     @Test
     @DisplayName("findByEmail - non-existent user - throws ResourceNotFoundException")
-    void findByEmail_NonExistentUser_ThrowsException() {
+    void findByLogin_NonExistentUser_ThrowsException() {
         // Arrange
         String email = "nonexistent@example.com";
-        when(userEntityRepository.findByEmail(email)).thenReturn(Optional.empty());
+        when(userEntityRepository.findByLogin(email)).thenReturn(Optional.empty());
 
         // Act & Assert
         ResourceNotFoundException exception = assertThrows(
                 ResourceNotFoundException.class,
-                () -> userRepositoryAdapter.findByEmail(email)
+                () -> userRepositoryAdapter.findByLogin(email)
         );
         assertEquals(String.format("User with email %s not found", email), exception.getMessage());
-        verify(userEntityRepository).findByEmail(email);
+        verify(userEntityRepository).findByLogin(email);
     }
 
     @Test
@@ -88,14 +91,14 @@ class UserRepositoryAdapterTest {
     void existsByEmail_ExistingEmail_ReturnsTrue() {
         // Arrange
         String email = "exists@example.com";
-        when(userEntityRepository.existsByEmail(email)).thenReturn(true);
+        when(userEntityRepository.existsByLogin(email)).thenReturn(true);
 
         // Act
-        boolean result = userRepositoryAdapter.existsByEmail(email);
+        boolean result = userRepositoryAdapter.existsByLogin(email);
 
         // Assert
         assertTrue(result);
-        verify(userEntityRepository).existsByEmail(email);
+        verify(userEntityRepository).existsByLogin(email);
     }
 
     @Test
@@ -103,13 +106,13 @@ class UserRepositoryAdapterTest {
     void existsByEmail_NonExistentEmail_ReturnsFalse() {
         // Arrange
         String email = "nonexistent@example.com";
-        when(userEntityRepository.existsByEmail(email)).thenReturn(false);
+        when(userEntityRepository.existsByLogin(email)).thenReturn(false);
 
         // Act
-        boolean result = userRepositoryAdapter.existsByEmail(email);
+        boolean result = userRepositoryAdapter.existsByLogin(email);
 
         // Assert
         assertFalse(result);
-        verify(userEntityRepository).existsByEmail(email);
+        verify(userEntityRepository).existsByLogin(email);
     }
 }

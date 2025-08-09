@@ -32,11 +32,11 @@ public class UserRepositoryAdapter implements UserRepository {
   }
 
   @Override
-  public UserModel findByEmail(String email) {
+  public UserModel findByLogin(String login) {
     return userEntityMapper.toModel(
-            userEntityRepository.findByEmail(email).orElseThrow(
+            userEntityRepository.findByLogin(login).orElseThrow(
                     () -> {
-                      var message = String.format("User with email %s not found", email);
+                        var message = String.format("User with email %s not found", login);
                       log.info(message);
                       return new ResourceNotFoundException(message);
                     }
@@ -59,7 +59,7 @@ public class UserRepositoryAdapter implements UserRepository {
   }
 
   @Override
-  public boolean existsByEmail(String email) {
-    return userEntityRepository.existsByEmail(email);
+  public boolean existsByLogin(String login) {
+      return userEntityRepository.existsByLogin(login);
   }
 }

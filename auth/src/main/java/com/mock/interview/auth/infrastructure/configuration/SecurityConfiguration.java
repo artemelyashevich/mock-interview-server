@@ -1,5 +1,7 @@
 package com.mock.interview.auth.infrastructure.configuration;
 
+import com.mock.interview.auth.application.port.in.SecurityService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,10 +12,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @Slf4j
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfiguration {
 
-  @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    private final SecurityService securityService;
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http
             .authorizeHttpRequests(auth ->
                     auth
@@ -23,7 +28,7 @@ public class SecurityConfiguration {
             .oauth2Login(oauth2Login -> {
               oauth2Login.successHandler(
                       (request, response, authentication) -> {
-// TODO
+                            securityService.authenticate(authentication);
                       }
               );
             })

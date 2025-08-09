@@ -99,7 +99,7 @@ class UserEntityMapperTest {
 
     assertAll(
             () -> assertEquals(entity.getId(), model.getId(), "ID should match"),
-            () -> assertEquals(entity.getEmail(), model.getEmail(), "Email should match"),
+            () -> assertEquals(entity.getLogin(), model.getLogin(), "Email should match"),
             () -> assertEquals(entity.getPasswordHash(), model.getPasswordHash(), "Password hash should match"),
             () -> assertEquals(entity.getCreatedAt(), model.getCreatedAt(), "Created date should match"),
             () -> assertEquals(entity.getUpdatedAt(), model.getUpdatedAt(), "Updated date should match")
@@ -114,7 +114,7 @@ class UserEntityMapperTest {
 
     assertAll(
             () -> assertEquals(model.getId(), entity.getId(), "ID should match"),
-            () -> assertEquals(model.getEmail(), entity.getEmail(), "Email should match"),
+            () -> assertEquals(model.getLogin(), entity.getLogin(), "Email should match"),
             () -> assertEquals(model.getPasswordHash(), entity.getPasswordHash(), "Password hash should match"),
             () -> assertEquals(model.getCreatedAt(), entity.getCreatedAt(), "Created date should match"),
             () -> assertEquals(model.getUpdatedAt(), entity.getUpdatedAt(), "Updated date should match"),
@@ -145,7 +145,7 @@ class UserEntityMapperTest {
 
     assertAll(
             () -> assertEquals(entities.size(), models.size(), "List size should match"),
-            () -> assertEquals(entities.getFirst().getEmail(), models.getFirst().getEmail(), "First email should match"),
+            () -> assertEquals(entities.getFirst().getLogin(), models.getFirst().getLogin(), "First email should match"),
             () -> assertEquals(entities.get(1).getId(), models.get(1).getId(), "Second ID should match")
     );
   }

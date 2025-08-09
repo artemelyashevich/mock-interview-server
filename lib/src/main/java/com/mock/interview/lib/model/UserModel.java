@@ -22,7 +22,7 @@ import java.util.Set;
 public class UserModel implements Serializable {
   private Long id;
 
-  private String email;
+  private String login;
 
   private String passwordHash;
 

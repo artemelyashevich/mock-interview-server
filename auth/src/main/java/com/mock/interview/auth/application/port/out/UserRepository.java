@@ -7,11 +7,11 @@ public interface UserRepository {
 
   UserModel findById(Long id);
 
-  UserModel findByEmail(String email);
+  UserModel findByLogin(String login);
 
   UserModel save(UserModel user);
 
   void delete(UserModel userModel);
 
-  boolean existsByEmail(String email);
+  boolean existsByLogin(String email);
 }

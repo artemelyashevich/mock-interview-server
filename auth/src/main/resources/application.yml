@@ -2,7 +2,7 @@ spring:
   application:
     name: auth-service
   config:
-    import: optional:file:.env[.properties]
+    import: optional:.env[.properties]
   datasource:
     driver-class-name: org.postgresql.Driver
     password: postgres
@@ -32,6 +32,11 @@ spring:
             client-id: ${GITHUB_CLIENT_ID}
             client-secret: ${GITHUB_CLIENT_SECRET}
             scope: user:email
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
 
 server:
   port: 8111

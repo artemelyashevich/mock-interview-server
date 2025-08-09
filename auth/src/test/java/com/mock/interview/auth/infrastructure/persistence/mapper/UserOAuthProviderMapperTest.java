@@ -1,7 +1,7 @@
 package com.mock.interview.auth.infrastructure.persistence.mapper;
 
 import com.mock.interview.auth.factory.UserOAuthTestDataFactory;
-import com.mock.interview.auth.infrastructure.persistence.entity.Provider;
+import com.mock.interview.auth.infrastructure.persistence.entity.OAuthProvider;
 import com.mock.interview.auth.infrastructure.persistence.entity.UserOAuthProviderEntity;
 import com.mock.interview.lib.model.UserOAuthProviderModel;
 import org.junit.jupiter.api.DisplayName;
@@ -25,18 +25,18 @@ class UserOAuthProviderMapperTest {
     private static Stream<UserOAuthProviderEntity> provideOAuthEntitiesForMapping() {
         return Stream.of(
                 UserOAuthTestDataFactory.createDefaultOAuthEntity(),
-                UserOAuthTestDataFactory.createOAuthEntity(2L, Provider.GITHUB.getValue(), "github123"),
-                UserOAuthTestDataFactory.createOAuthEntity(3L, Provider.GITHUB.getValue(), "fb123"),
-                UserOAuthTestDataFactory.createOAuthEntity(null, Provider.GOOGLE.getValue(), "linkedin123")
+                UserOAuthTestDataFactory.createOAuthEntity(2L, OAuthProvider.GITHUB.getValue()),
+                UserOAuthTestDataFactory.createOAuthEntity(3L, OAuthProvider.GITHUB.getValue()),
+                UserOAuthTestDataFactory.createOAuthEntity(null, OAuthProvider.GOOGLE.getValue())
         );
     }
 
     private static Stream<UserOAuthProviderModel> provideOAuthModelsForMapping() {
         return Stream.of(
                 UserOAuthTestDataFactory.createDefaultOAuthModel(),
-                UserOAuthTestDataFactory.createOAuthModel(2L, Provider.GITHUB.getValue().toUpperCase(), "twitter123"),
-                UserOAuthTestDataFactory.createOAuthModel(3L, Provider.GOOGLE.getValue().toUpperCase(), "apple123"),
-                UserOAuthTestDataFactory.createOAuthModel(null, Provider.GITHUB.getValue().toUpperCase(), "ms123")
+                UserOAuthTestDataFactory.createOAuthModel(2L, OAuthProvider.GITHUB.getValue().toUpperCase()),
+                UserOAuthTestDataFactory.createOAuthModel(3L, OAuthProvider.GOOGLE.getValue().toUpperCase()),
+                UserOAuthTestDataFactory.createOAuthModel(null, OAuthProvider.GITHUB.getValue().toUpperCase())
         );
     }
 
@@ -67,7 +67,6 @@ class UserOAuthProviderMapperTest {
         assertAll(
                 () -> assertEquals(entity.getId(), model.getId(), "ID should match"),
                 () -> assertEquals(entity.getProvider().name(), model.getProvider(), "Provider should match"),
-                () -> assertEquals(entity.getProviderId(), model.getProviderId(), "Provider ID should match"),
                 () -> assertEquals(entity.getCreatedAt(), model.getCreatedAt(), "Created date should match")
         );
     }
@@ -77,15 +76,14 @@ class UserOAuthProviderMapperTest {
     void toModels_ListOfEntities_ReturnsListOfModels() {
         var entities = List.of(
                 UserOAuthTestDataFactory.createDefaultOAuthEntity(),
-                UserOAuthTestDataFactory.createOAuthEntity(2L, "GOOGLE", "google123")
+                UserOAuthTestDataFactory.createOAuthEntity(2L, "GOOGLE")
         );
 
         var models = mapper.toModels(entities);
 
         assertAll(
                 () -> assertEquals(entities.size(), models.size(), "List size should match"),
-                () -> assertEquals(entities.getFirst().getProvider().name(), models.getFirst().getProvider(), "First provider should match"),
-                () -> assertEquals(entities.get(1).getProviderId(), models.get(1).getProviderId(), "Second provider ID should match")
+                () -> assertEquals(entities.getFirst().getProvider().name(), models.getFirst().getProvider(), "First provider should match")
         );
     }
 }

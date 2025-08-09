@@ -8,6 +8,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -19,6 +20,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
@@ -41,10 +43,15 @@ public class UserEntity extends AbstractEntity implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @NaturalId
   @Column(nullable = false, unique = true)
   private String login;
 
-  @Column(name = "password_hash", nullable = false)
+  @NaturalId
+  @Column(unique = true)
+  private String email;
+
+  @Column(name = "password_hash")
   private String passwordHash;
 
   @Builder.Default
@@ -60,7 +67,11 @@ public class UserEntity extends AbstractEntity implements Serializable {
   private LocalDateTime updatedAt;
 
   @Builder.Default
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @Column(nullable = false, name = "email_verified")
+  private boolean emailVerified = false;
+
+  @Builder.Default
+  @OneToMany(mappedBy = "login", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<UserOAuthProviderEntity> oauthProviders = new ArrayList<>();
 
   @Builder.Default
@@ -71,4 +82,8 @@ public class UserEntity extends AbstractEntity implements Serializable {
           inverseJoinColumns = @JoinColumn(name = "role_id")
   )
   private Set<RoleEntity> roles = new HashSet<>();
+
+  public void addProvider(UserOAuthProviderEntity provider) {
+    this.oauthProviders.add(provider);
+  }
 }

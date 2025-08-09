@@ -8,7 +8,9 @@ import lombok.With;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @With
@@ -24,6 +26,11 @@ public class UserModel implements Serializable {
 
   private String login;
 
+  private String email;
+
+  @Builder.Default
+  private boolean emailVerified = false;
+
   private String passwordHash;
 
   @Builder.Default
@@ -37,6 +44,13 @@ public class UserModel implements Serializable {
 
   @Builder.Default
   private Set<RoleModel> roles = new HashSet<>();
+
+  @Builder.Default
+  private List<UserOAuthProviderModel> oAuthProviderModelList = new ArrayList<>();
+
+  public void addOAuthProviderModel(UserOAuthProviderModel oAuthProviderModel) {
+    oAuthProviderModelList.add(oAuthProviderModel);
+  }
 
   public boolean hasRole(String roleName) {
     return roles.stream().anyMatch(role -> role.getName().equals(roleName));

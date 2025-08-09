@@ -27,5 +27,5 @@ public class UserOAuthProviderModel implements Serializable {
   @Builder.Default
   private LocalDateTime createdAt = LocalDateTime.now();
 
-  private UserModel user;
+  private String login;
 }

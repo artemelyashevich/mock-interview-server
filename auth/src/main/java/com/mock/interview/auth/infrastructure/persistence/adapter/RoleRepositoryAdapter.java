@@ -1,15 +1,16 @@
 package com.mock.interview.auth.infrastructure.persistence.adapter;
 
 import com.mock.interview.auth.application.port.out.RoleRepository;
+import com.mock.interview.auth.infrastructure.persistence.entity.RoleEntity;
 import com.mock.interview.auth.infrastructure.persistence.mapper.RoleEntityMapper;
 import com.mock.interview.auth.infrastructure.persistence.repository.RoleEntityRepository;
-import com.mock.interview.lib.exception.ResourceNotFoundException;
 import com.mock.interview.lib.model.RoleModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -21,13 +22,8 @@ public class RoleRepositoryAdapter implements RoleRepository {
   private final RoleEntityRepository roleRepository;
 
   @Override
-  public RoleModel findByName(String name) {
-    return roleEntityMapper.toModel(roleRepository.findByName(name)
-            .orElseThrow(() -> {
-              var message = String.format("Role with name %s not found", name);
-              log.info(message);
-              return new ResourceNotFoundException(message);
-            }));
+  public Optional<RoleEntity> findByName(String name) {
+    return roleRepository.findByName(name);
   }
 
   @Override

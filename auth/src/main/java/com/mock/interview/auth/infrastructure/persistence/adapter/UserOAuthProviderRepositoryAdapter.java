@@ -1,6 +1,7 @@
 package com.mock.interview.auth.infrastructure.persistence.adapter;
 
 import com.mock.interview.auth.application.port.out.UserOAuthProviderRepository;
+import com.mock.interview.auth.infrastructure.persistence.entity.OAuthProvider;
 import com.mock.interview.auth.infrastructure.persistence.mapper.UserOAuthProviderEntityMapper;
 import com.mock.interview.auth.infrastructure.persistence.repository.UserOAuthProviderEntityRepository;
 import com.mock.interview.lib.model.UserOAuthProviderModel;
@@ -21,7 +22,8 @@ public class UserOAuthProviderRepositoryAdapter implements UserOAuthProviderRepo
 
     @Override
     public Optional<UserOAuthProviderModel> findByUserLoginAndProviderId(String userLogin, String providerId) {
-        return userOAuthProviderRepository.findByUserLoginAndProviderId(userLogin, providerId);
+        return userOAuthProviderRepository.findByLoginAndProvider(userLogin, OAuthProvider.valueOf(providerId.toUpperCase()))
+                .map(userOauthProviderEntityMapper::toModel);
     }
 
     @Override

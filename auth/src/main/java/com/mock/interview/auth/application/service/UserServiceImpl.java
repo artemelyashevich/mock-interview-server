@@ -8,6 +8,7 @@ import com.mock.interview.lib.model.UserModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -64,5 +65,20 @@ public class UserServiceImpl implements UserService {
 
         userRepository.delete(userModel);
         log.debug("User deleted: {}", userModel);
+    }
+
+    @Override
+    @Transactional
+    public UserModel update(UserModel user) {
+        log.debug("Attempting to update user: {}", user);
+
+        var oldUser = userRepository.findById(user.getId());
+        oldUser.setLogin(user.getLogin());
+        oldUser.setOAuthProviderModelList(user.getOAuthProviderModelList());
+
+        var newUser = userRepository.save(oldUser);
+
+        log.debug("User updated: {}", oldUser);
+        return newUser;
     }
 }

@@ -2,12 +2,14 @@ package com.mock.interview.auth.application.service;
 
 import com.mock.interview.auth.application.port.in.RoleService;
 import com.mock.interview.auth.application.port.out.RoleRepository;
+import com.mock.interview.auth.infrastructure.persistence.mapper.RoleEntityMapper;
 import com.mock.interview.lib.exception.ResourceAlreadyExistException;
 import com.mock.interview.lib.exception.ResourceNotFoundException;
 import com.mock.interview.lib.model.RoleModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -16,6 +18,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
+
+    private static final RoleEntityMapper roleEntityMapper = RoleEntityMapper.INSTANCE;
 
     private final RoleRepository roleRepository;
 
@@ -30,13 +34,22 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public RoleModel findByName(String name) {
         log.debug("Attempting to find role by name {}", name);
 
         var role = roleRepository.findByName(name);
 
+        var r = new RoleModel();
+
+        if (role.isEmpty()) {
+            r = save(RoleModel.builder().name(name).build());
+        } else {
+            r = roleEntityMapper.toModel(role.get());
+        }
+
         log.debug("Role found: {}", role);
-        return role;
+        return r;
     }
 
     @Override

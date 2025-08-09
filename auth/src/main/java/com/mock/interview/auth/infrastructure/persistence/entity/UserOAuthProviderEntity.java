@@ -35,16 +35,12 @@ public class UserOAuthProviderEntity extends AbstractEntity implements Serializa
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
-  private UserEntity user;
+  @Column(nullable = false, unique = true, name = "login")
+  private String login;
 
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
-  private Provider provider;
-
-  @Column(name = "provider_id", nullable = false)
-  private String providerId;
+  private OAuthProvider provider;
 
   @Column(name = "created_at", updatable = false)
   @CreationTimestamp

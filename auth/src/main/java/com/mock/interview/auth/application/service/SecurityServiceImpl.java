@@ -35,13 +35,22 @@ public class SecurityServiceImpl implements SecurityService {
     public UserModel findCurrentUser() {
         log.debug("Attempting to find Current User");
 
-        var user = userService.findById((Long) SecurityContextHolder.getContext().getAuthentication().getDetails());
+        var authToken = validateAuthentication(SecurityContextHolder.getContext().getAuthentication());
+        var principal = extractPrincipal(authToken);
+        var providerId = authToken.getAuthorizedClientRegistrationId();
+        var provider = OAuthProvider.valueOf(providerId.toUpperCase());
+        String login = principal.getAttribute("email");
+
+        if (OAuthProvider.GITHUB.equals(provider)) {
+            login = principal.getAttribute("login");
+        }
+
+        var user = userService.findByLogin(login);
 
         log.debug("Current User is Found");
         return user;
     }
 
-    // FIXME
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public UserModel authenticate(Authentication authentication) {

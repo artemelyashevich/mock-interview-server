@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: userProfile-service
+  config:
+    import: optional:file:.env[.properties]
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: postgres
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/app
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      auto-commit: true
+      pool-name: HikariPool-1
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false

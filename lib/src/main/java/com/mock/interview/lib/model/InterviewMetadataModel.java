@@ -8,10 +8,12 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.With;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@With
 @Getter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)

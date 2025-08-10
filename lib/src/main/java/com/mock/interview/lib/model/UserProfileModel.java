@@ -3,6 +3,7 @@ package com.mock.interview.lib.model;
 import lombok.*;
 import java.time.LocalDateTime;
 
+@With
 @Getter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -16,6 +17,8 @@ public class UserProfileModel {
     private final String firstName;
 
     private final String lastName;
+    
+    private final Long userId;
 
     private final String avatarUrl;
     

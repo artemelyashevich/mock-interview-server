@@ -1,7 +1,9 @@
 package com.mock.interview.lib.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.With;
@@ -21,6 +23,8 @@ import java.util.Set;
         "passwordHash",
         "roles"
 })
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserModel implements Serializable {
   private Long id;
 

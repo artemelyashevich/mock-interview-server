@@ -17,19 +17,19 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RoleRepositoryAdapter implements RoleRepository {
 
-  private static final RoleEntityMapper roleEntityMapper = RoleEntityMapper.INSTANCE;
+    private static final RoleEntityMapper roleEntityMapper = RoleEntityMapper.INSTANCE;
 
-  private final RoleEntityRepository roleRepository;
+    private final RoleEntityRepository roleRepository;
 
-  @Override
-  public Optional<RoleEntity> findByName(String name) {
-    return roleRepository.findByName(name);
-  }
+    @Override
+    public Optional<RoleEntity> findByName(String name) {
+        return roleRepository.findByName(name);
+    }
 
-  @Override
-  public List<RoleModel> findAll() {
-    return roleEntityMapper.toModels(roleRepository.findAll());
-  }
+    @Override
+    public List<RoleModel> findAll() {
+        return roleEntityMapper.toModels(roleRepository.findAll());
+    }
 
     @Override
     public boolean existsByName(String name) {
@@ -37,16 +37,16 @@ public class RoleRepositoryAdapter implements RoleRepository {
     }
 
     @Override
-  public RoleModel save(RoleModel roleModel) {
-    return roleEntityMapper.toModel(
+    public RoleModel save(RoleModel roleModel) {
+        return roleEntityMapper.toModel(
             roleRepository.save(
-                    roleEntityMapper.toEntity(roleModel)
+                roleEntityMapper.toEntity(roleModel)
             )
-    );
-  }
+        );
+    }
 
-  @Override
-  public void delete(RoleModel roleModel) {
-    roleRepository.deleteById(roleModel.getId());
-  }
+    @Override
+    public void delete(RoleModel roleModel) {
+        roleRepository.deleteById(roleModel.getId());
+    }
 }

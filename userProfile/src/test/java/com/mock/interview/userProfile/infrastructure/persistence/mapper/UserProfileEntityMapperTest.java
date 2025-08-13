@@ -12,12 +12,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("UserProfileEntityMapper Unit Tests")
 class UserProfileEntityMapperTest {
-
-    private final UserProfileEntityMapper mapper = Mappers.getMapper(UserProfileEntityMapper.class);
 
     // Test data
     private static final Long TEST_ID = 1L;
@@ -28,6 +30,48 @@ class UserProfileEntityMapperTest {
     private static final LocalDateTime TEST_CREATED_AT = LocalDateTime.now().minusDays(1);
     private static final LocalDateTime TEST_UPDATED_AT = LocalDateTime.now().minusHours(2);
     private static final Long TEST_VERSION = 1L;
+    private final UserProfileEntityMapper mapper = Mappers.getMapper(UserProfileEntityMapper.class);
+
+    private static Stream<UserProfileEntity> provideProfileEntitiesForMapping() {
+        return Stream.of(
+            createTestEntity(TEST_ID, TEST_FIRST_NAME, TEST_LAST_NAME),
+            createTestEntity(2L, "Jane", "Smith"),
+            createTestEntity(null, null, null)
+        );
+    }
+
+    private static Stream<UserProfileModel> provideProfileModelsForMapping() {
+        return Stream.of(
+            createTestModel(TEST_FIRST_NAME, TEST_LAST_NAME),
+            createTestModel("Alice", "Johnson"),
+            createTestModel(null, null)
+        );
+    }
+
+    private static UserProfileEntity createTestEntity(Long id, String firstName, String lastName) {
+        return UserProfileEntity.builder()
+            .id(id)
+            .firstName(firstName)
+            .lastName(lastName)
+            .avatarUrl(TEST_AVATAR_URL)
+            .lastActivity(TEST_LAST_ACTIVITY)
+            .createdAt(TEST_CREATED_AT)
+            .updatedAt(TEST_UPDATED_AT)
+            .version(TEST_VERSION)
+            .build();
+    }
+
+    private static UserProfileModel createTestModel(String firstName, String lastName) {
+        return UserProfileModel.builder()
+            .id(TEST_ID)
+            .firstName(firstName)
+            .lastName(lastName)
+            .avatarUrl(TEST_AVATAR_URL)
+            .lastActivity(TEST_LAST_ACTIVITY)
+            .createdAt(TEST_CREATED_AT)
+            .updatedAt(TEST_UPDATED_AT)
+            .build();
+    }
 
     @Test
     @DisplayName("toModel - with null entity - returns null")
@@ -54,13 +98,13 @@ class UserProfileEntityMapperTest {
         UserProfileModel model = mapper.toModel(entity);
 
         assertAll(
-                () -> assertEquals(entity.getId(), model.getId(), "ID should match"),
-                () -> assertEquals(entity.getFirstName(), model.getFirstName(), "First name should match"),
-                () -> assertEquals(entity.getLastName(), model.getLastName(), "Last name should match"),
-                () -> assertEquals(entity.getAvatarUrl(), model.getAvatarUrl(), "Avatar URL should match"),
-                () -> assertEquals(entity.getLastActivity(), model.getLastActivity(), "Last activity should match"),
-                () -> assertEquals(entity.getCreatedAt(), model.getCreatedAt(), "Created date should match"),
-                () -> assertEquals(entity.getUpdatedAt(), model.getUpdatedAt(), "Updated date should match")
+            () -> assertEquals(entity.getId(), model.getId(), "ID should match"),
+            () -> assertEquals(entity.getFirstName(), model.getFirstName(), "First name should match"),
+            () -> assertEquals(entity.getLastName(), model.getLastName(), "Last name should match"),
+            () -> assertEquals(entity.getAvatarUrl(), model.getAvatarUrl(), "Avatar URL should match"),
+            () -> assertEquals(entity.getLastActivity(), model.getLastActivity(), "Last activity should match"),
+            () -> assertEquals(entity.getCreatedAt(), model.getCreatedAt(), "Created date should match"),
+            () -> assertEquals(entity.getUpdatedAt(), model.getUpdatedAt(), "Updated date should match")
         );
     }
 
@@ -71,13 +115,13 @@ class UserProfileEntityMapperTest {
         UserProfileEntity entity = mapper.toEntity(model);
 
         assertAll(
-                () -> assertEquals(model.getId(), entity.getId(), "ID should match"),
-                () -> assertEquals(model.getFirstName(), entity.getFirstName(), "First name should match"),
-                () -> assertEquals(model.getLastName(), entity.getLastName(), "Last name should match"),
-                () -> assertEquals(model.getAvatarUrl(), entity.getAvatarUrl(), "Avatar URL should match"),
-                () -> assertEquals(model.getLastActivity(), entity.getLastActivity(), "Last activity should match"),
-                () -> assertEquals(model.getCreatedAt(), entity.getCreatedAt(), "Created date should match"),
-                () -> assertEquals(model.getUpdatedAt(), entity.getUpdatedAt(), "Updated date should match")
+            () -> assertEquals(model.getId(), entity.getId(), "ID should match"),
+            () -> assertEquals(model.getFirstName(), entity.getFirstName(), "First name should match"),
+            () -> assertEquals(model.getLastName(), entity.getLastName(), "Last name should match"),
+            () -> assertEquals(model.getAvatarUrl(), entity.getAvatarUrl(), "Avatar URL should match"),
+            () -> assertEquals(model.getLastActivity(), entity.getLastActivity(), "Last activity should match"),
+            () -> assertEquals(model.getCreatedAt(), entity.getCreatedAt(), "Created date should match"),
+            () -> assertEquals(model.getUpdatedAt(), entity.getUpdatedAt(), "Updated date should match")
         );
     }
 
@@ -85,16 +129,16 @@ class UserProfileEntityMapperTest {
     @DisplayName("toModels - with list of entities - returns list of models")
     void toModels_ListOfEntities_ReturnsListOfModels() {
         List<UserProfileEntity> entities = List.of(
-                createTestEntity(TEST_ID, TEST_FIRST_NAME, TEST_LAST_NAME),
-                createTestEntity(2L, "Jane", "Smith")
+            createTestEntity(TEST_ID, TEST_FIRST_NAME, TEST_LAST_NAME),
+            createTestEntity(2L, "Jane", "Smith")
         );
 
         List<UserProfileModel> models = mapper.toModels(entities);
 
         assertAll(
-                () -> assertEquals(entities.size(), models.size(), "List size should match"),
-                () -> assertEquals(entities.get(0).getFirstName(), models.get(0).getFirstName(), "First name should match"),
-                () -> assertEquals(entities.get(1).getLastName(), models.get(1).getLastName(), "Last name should match")
+            () -> assertEquals(entities.size(), models.size(), "List size should match"),
+            () -> assertEquals(entities.get(0).getFirstName(), models.get(0).getFirstName(), "First name should match"),
+            () -> assertEquals(entities.get(1).getLastName(), models.get(1).getLastName(), "Last name should match")
         );
     }
 
@@ -114,49 +158,8 @@ class UserProfileEntityMapperTest {
         model.markAsActive();
 
         assertAll(
-                () -> assertNotEquals(originalLastActivity, model.getLastActivity()),
-                () -> assertTrue(model.getLastActivity().isAfter(originalLastActivity))
+            () -> assertNotEquals(originalLastActivity, model.getLastActivity()),
+            () -> assertTrue(model.getLastActivity().isAfter(originalLastActivity))
         );
-    }
-
-    private static Stream<UserProfileEntity> provideProfileEntitiesForMapping() {
-        return Stream.of(
-                createTestEntity(TEST_ID, TEST_FIRST_NAME, TEST_LAST_NAME),
-                createTestEntity(2L, "Jane", "Smith"),
-                createTestEntity(null, null, null)
-        );
-    }
-
-    private static Stream<UserProfileModel> provideProfileModelsForMapping() {
-        return Stream.of(
-                createTestModel(TEST_FIRST_NAME, TEST_LAST_NAME),
-                createTestModel("Alice", "Johnson"),
-                createTestModel(null, null)
-        );
-    }
-
-    private static UserProfileEntity createTestEntity(Long id, String firstName, String lastName) {
-        return UserProfileEntity.builder()
-                .id(id)
-                .firstName(firstName)
-                .lastName(lastName)
-                .avatarUrl(TEST_AVATAR_URL)
-                .lastActivity(TEST_LAST_ACTIVITY)
-                .createdAt(TEST_CREATED_AT)
-                .updatedAt(TEST_UPDATED_AT)
-                .version(TEST_VERSION)
-                .build();
-    }
-
-    private static UserProfileModel createTestModel(String firstName, String lastName) {
-        return UserProfileModel.builder()
-                .id(TEST_ID)
-                .firstName(firstName)
-                .lastName(lastName)
-                .avatarUrl(TEST_AVATAR_URL)
-                .lastActivity(TEST_LAST_ACTIVITY)
-                .createdAt(TEST_CREATED_AT)
-                .updatedAt(TEST_UPDATED_AT)
-                .build();
     }
 }

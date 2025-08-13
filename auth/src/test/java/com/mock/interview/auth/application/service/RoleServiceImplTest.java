@@ -1,7 +1,5 @@
 package com.mock.interview.auth.application.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.mock.interview.auth.application.port.out.RoleRepository;
 import com.mock.interview.auth.infrastructure.persistence.mapper.RoleEntityMapper;
 import com.mock.interview.lib.exception.ResourceAlreadyExistException;
@@ -12,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,27 +17,30 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("RoleService Unit Tests")
 class RoleServiceImplTest {
-
-    @Mock
-    private RoleRepository roleRepository;
-
-    @Mock
-    private RoleEntityMapper roleEntityMapper;
-
-    @InjectMocks
-    private RoleServiceImpl roleService;
 
     // Test data
     private static final String TEST_ROLE_NAME = "TEST_ROLE";
     private static final String EXISTING_ROLE_NAME = "EXISTING_ROLE";
     private static final RoleModel TEST_ROLE = RoleModel.builder().name(TEST_ROLE_NAME).build();
     private static final RoleModel EXISTING_ROLE = RoleModel.builder().name(EXISTING_ROLE_NAME).build();
+    @Mock
+    private RoleRepository roleRepository;
+    @Mock
+    private RoleEntityMapper roleEntityMapper;
+    @InjectMocks
+    private RoleServiceImpl roleService;
 
     @Test
     @DisplayName("findAll - returns all roles")
@@ -63,9 +63,9 @@ class RoleServiceImplTest {
     void findByName_NonExistentRole_CreatesAndReturnsNewRole() {
         // Arrange
         when(roleRepository.findByName(TEST_ROLE_NAME))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
         when(roleRepository.save(any(RoleModel.class)))
-                .thenReturn(TEST_ROLE);
+            .thenReturn(TEST_ROLE);
 
         // Act
         RoleModel result = roleService.findByName(TEST_ROLE_NAME);
@@ -82,9 +82,9 @@ class RoleServiceImplTest {
     void save_NewRole_SavesAndReturnsRole() {
         // Arrange
         when(roleRepository.existsByName(TEST_ROLE_NAME))
-                .thenReturn(false);
+            .thenReturn(false);
         when(roleRepository.save(TEST_ROLE))
-                .thenReturn(TEST_ROLE);
+            .thenReturn(TEST_ROLE);
 
         // Act
         RoleModel result = roleService.save(TEST_ROLE);
@@ -101,16 +101,16 @@ class RoleServiceImplTest {
     void save_ExistingRole_ThrowsException() {
         // Arrange
         when(roleRepository.existsByName(EXISTING_ROLE_NAME))
-                .thenReturn(true);
+            .thenReturn(true);
 
         // Act & Assert
         ResourceAlreadyExistException exception = assertThrows(
-                ResourceAlreadyExistException.class,
-                () -> roleService.save(EXISTING_ROLE)
+            ResourceAlreadyExistException.class,
+            () -> roleService.save(EXISTING_ROLE)
         );
         assertEquals(
-                String.format("Role with name %s already exists", EXISTING_ROLE_NAME),
-                exception.getMessage()
+            String.format("Role with name %s already exists", EXISTING_ROLE_NAME),
+            exception.getMessage()
         );
         verify(roleRepository).existsByName(EXISTING_ROLE_NAME);
         verify(roleRepository, never()).save(any());
@@ -121,7 +121,7 @@ class RoleServiceImplTest {
     void delete_ExistingRole_DeletesRole() {
         // Arrange
         when(roleRepository.existsByName(EXISTING_ROLE_NAME))
-                .thenReturn(true);
+            .thenReturn(true);
         doNothing().when(roleRepository).delete(EXISTING_ROLE);
 
         // Act
@@ -137,16 +137,16 @@ class RoleServiceImplTest {
     void delete_NonExistentRole_ThrowsException() {
         // Arrange
         when(roleRepository.existsByName(TEST_ROLE_NAME))
-                .thenReturn(false);
+            .thenReturn(false);
 
         // Act & Assert
         ResourceNotFoundException exception = assertThrows(
-                ResourceNotFoundException.class,
-                () -> roleService.delete(TEST_ROLE)
+            ResourceNotFoundException.class,
+            () -> roleService.delete(TEST_ROLE)
         );
         assertEquals(
-                String.format("Role with name %s does not exist", TEST_ROLE_NAME),
-                exception.getMessage()
+            String.format("Role with name %s does not exist", TEST_ROLE_NAME),
+            exception.getMessage()
         );
         verify(roleRepository).existsByName(TEST_ROLE_NAME);
         verify(roleRepository, never()).delete(any());

@@ -1,34 +1,44 @@
 package com.mock.interview.lib.model;
 
-import lombok.*;
+import com.mock.interview.lib.contract.AbstractModel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.With;
+
 import java.time.LocalDateTime;
 
 @With
 @Getter
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Builder(toBuilder = true)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class UserProfileModel {
-    
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserProfileModel extends AbstractModel {
+
     @EqualsAndHashCode.Include
-    private final Long id;
-    
-    private final String firstName;
+    private Long id;
 
-    private final String lastName;
-    
-    private final Long userId;
+    private String firstName;
 
-    private final String avatarUrl;
-    
+    private String lastName;
+
+    private Long userId;
+
+    private String avatarUrl;
+
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
+
     @Setter
     @Builder.Default
     private LocalDateTime lastActivity = LocalDateTime.now();
-    
-    @Builder.Default
-    private final LocalDateTime createdAt = LocalDateTime.now();
-    
+
     @Setter
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();

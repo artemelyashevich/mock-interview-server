@@ -14,12 +14,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("InterviewMetadataEntityMapper Unit Tests")
 class InterviewMetadataEntityMapperTest {
-
-    private final InterviewMetadataEntityMapper mapper = Mappers.getMapper(InterviewMetadataEntityMapper.class);
 
     // Test data
     private static final Long TEST_ID = 1L;
@@ -28,6 +31,49 @@ class InterviewMetadataEntityMapperTest {
     private static final LocalDateTime TEST_START_TIME = LocalDateTime.now();
     private static final LocalDateTime TEST_CREATED_AT = LocalDateTime.now().minusDays(1);
     private static final LocalDateTime TEST_UPDATED_AT = LocalDateTime.now().minusHours(1);
+    private final InterviewMetadataEntityMapper mapper = Mappers.getMapper(InterviewMetadataEntityMapper.class);
+
+    private static Stream<InterviewMetadataEntity> provideMetadataEntitiesForMapping() {
+        return Stream.of(
+            createTestEntity(TEST_ID, InterviewPosition.JUNIOR, InterviewStatus.IN_PROGRESS),
+            createTestEntity(2L, InterviewPosition.MIDDLE, InterviewStatus.COMPLETED),
+            createTestEntity(null, InterviewPosition.SENIOR, InterviewStatus.EVALUATED)
+        );
+    }
+
+    private static Stream<InterviewMetadataModel> provideMetadataModelsForMapping() {
+        return Stream.of(
+            createTestModel(InterviewStatus.IN_PROGRESS),
+            createTestModel(InterviewStatus.COMPLETED),
+            createTestModel(InterviewStatus.EVALUATED)
+        );
+    }
+
+    private static InterviewMetadataEntity createTestEntity(Long id, InterviewPosition position, InterviewStatus status) {
+        return InterviewMetadataEntity.builder()
+            .id(id)
+            .interviewId(TEST_INTERVIEW_ID)
+            .userId(TEST_USER_ID)
+            .position(position)
+            .status(status)
+            .startTime(TEST_START_TIME)
+            .createdAt(TEST_CREATED_AT)
+            .updatedAt(TEST_UPDATED_AT)
+            .build();
+    }
+
+    private static InterviewMetadataModel createTestModel(InterviewStatus status) {
+        return InterviewMetadataModel.builder()
+            .id(TEST_ID)
+            .interviewId(TEST_INTERVIEW_ID)
+            .userId(TEST_USER_ID)
+            .position(InterviewPosition.MIDDLE)
+            .status(status)
+            .startTime(TEST_START_TIME)
+            .createdAt(TEST_CREATED_AT)
+            .updatedAt(TEST_UPDATED_AT)
+            .build();
+    }
 
     @Test
     @DisplayName("toModel - with null entity - returns null")
@@ -54,14 +100,14 @@ class InterviewMetadataEntityMapperTest {
         InterviewMetadataModel model = mapper.toModel(entity);
 
         assertAll(
-                () -> assertEquals(entity.getId(), model.getId(), "ID should match"),
-                () -> assertEquals(entity.getInterviewId(), model.getInterviewId(), "Interview ID should match"),
-                () -> assertEquals(entity.getUserId(), model.getUserId(), "User ID should match"),
-                () -> assertEquals(entity.getPosition(), model.getPosition(), "Position should match"),
-                () -> assertEquals(entity.getStatus(), model.getStatus(), "Status should match"),
-                () -> assertEquals(entity.getStartTime(), model.getStartTime(), "Start time should match"),
-                () -> assertEquals(entity.getCreatedAt(), model.getCreatedAt(), "Created date should match"),
-                () -> assertEquals(entity.getUpdatedAt(), model.getUpdatedAt(), "Updated date should match")
+            () -> assertEquals(entity.getId(), model.getId(), "ID should match"),
+            () -> assertEquals(entity.getInterviewId(), model.getInterviewId(), "Interview ID should match"),
+            () -> assertEquals(entity.getUserId(), model.getUserId(), "User ID should match"),
+            () -> assertEquals(entity.getPosition(), model.getPosition(), "Position should match"),
+            () -> assertEquals(entity.getStatus(), model.getStatus(), "Status should match"),
+            () -> assertEquals(entity.getStartTime(), model.getStartTime(), "Start time should match"),
+            () -> assertEquals(entity.getCreatedAt(), model.getCreatedAt(), "Created date should match"),
+            () -> assertEquals(entity.getUpdatedAt(), model.getUpdatedAt(), "Updated date should match")
         );
     }
 
@@ -72,14 +118,14 @@ class InterviewMetadataEntityMapperTest {
         InterviewMetadataEntity entity = mapper.toEntity(model);
 
         assertAll(
-                () -> assertEquals(model.getId(), entity.getId(), "ID should match"),
-                () -> assertEquals(model.getInterviewId(), entity.getInterviewId(), "Interview ID should match"),
-                () -> assertEquals(model.getUserId(), entity.getUserId(), "User ID should match"),
-                () -> assertEquals(model.getPosition(), entity.getPosition(), "Position should match"),
-                () -> assertEquals(model.getStatus(), entity.getStatus(), "Status should match"),
-                () -> assertEquals(model.getStartTime(), entity.getStartTime(), "Start time should match"),
-                () -> assertEquals(model.getCreatedAt(), entity.getCreatedAt(), "Created date should match"),
-                () -> assertEquals(model.getUpdatedAt(), entity.getUpdatedAt(), "Updated date should match")
+            () -> assertEquals(model.getId(), entity.getId(), "ID should match"),
+            () -> assertEquals(model.getInterviewId(), entity.getInterviewId(), "Interview ID should match"),
+            () -> assertEquals(model.getUserId(), entity.getUserId(), "User ID should match"),
+            () -> assertEquals(model.getPosition(), entity.getPosition(), "Position should match"),
+            () -> assertEquals(model.getStatus(), entity.getStatus(), "Status should match"),
+            () -> assertEquals(model.getStartTime(), entity.getStartTime(), "Start time should match"),
+            () -> assertEquals(model.getCreatedAt(), entity.getCreatedAt(), "Created date should match"),
+            () -> assertEquals(model.getUpdatedAt(), entity.getUpdatedAt(), "Updated date should match")
         );
     }
 
@@ -87,16 +133,16 @@ class InterviewMetadataEntityMapperTest {
     @DisplayName("toModels - with list of entities - returns list of models")
     void toModels_ListOfEntities_ReturnsListOfModels() {
         List<InterviewMetadataEntity> entities = List.of(
-                createTestEntity(TEST_ID, InterviewPosition.MIDDLE, InterviewStatus.IN_PROGRESS),
-                createTestEntity(2L, InterviewPosition.SENIOR, InterviewStatus.COMPLETED)
+            createTestEntity(TEST_ID, InterviewPosition.MIDDLE, InterviewStatus.IN_PROGRESS),
+            createTestEntity(2L, InterviewPosition.SENIOR, InterviewStatus.COMPLETED)
         );
 
         List<InterviewMetadataModel> models = mapper.toModels(entities);
 
         assertAll(
-                () -> assertEquals(entities.size(), models.size(), "List size should match"),
-                () -> assertEquals(entities.get(0).getPosition(), models.get(0).getPosition(), "First position should match"),
-                () -> assertEquals(entities.get(1).getStatus(), models.get(1).getStatus(), "Second status should match")
+            () -> assertEquals(entities.size(), models.size(), "List size should match"),
+            () -> assertEquals(entities.get(0).getPosition(), models.get(0).getPosition(), "First position should match"),
+            () -> assertEquals(entities.get(1).getStatus(), models.get(1).getStatus(), "Second status should match")
         );
     }
 
@@ -107,8 +153,8 @@ class InterviewMetadataEntityMapperTest {
         InterviewMetadataModel inProgressModel = createTestModel(InterviewStatus.IN_PROGRESS);
 
         assertAll(
-                () -> assertTrue(completedModel.isCompleted()),
-                () -> assertFalse(inProgressModel.isCompleted())
+            () -> assertTrue(completedModel.isCompleted()),
+            () -> assertFalse(inProgressModel.isCompleted())
         );
     }
 
@@ -121,51 +167,9 @@ class InterviewMetadataEntityMapperTest {
         InterviewMetadataModel updatedModel = model.changeStatus(InterviewStatus.COMPLETED);
 
         assertAll(
-                () -> assertEquals(InterviewStatus.COMPLETED, updatedModel.getStatus()),
-                () -> assertNotEquals(originalUpdatedAt, updatedModel.getUpdatedAt()),
-                () -> assertTrue(updatedModel.getUpdatedAt().isAfter(originalUpdatedAt))
+            () -> assertEquals(InterviewStatus.COMPLETED, updatedModel.getStatus()),
+            () -> assertNotEquals(originalUpdatedAt, updatedModel.getUpdatedAt()),
+            () -> assertTrue(updatedModel.getUpdatedAt().isAfter(originalUpdatedAt))
         );
-    }
-
-    private static Stream<InterviewMetadataEntity> provideMetadataEntitiesForMapping() {
-        return Stream.of(
-                createTestEntity(TEST_ID, InterviewPosition.JUNIOR, InterviewStatus.IN_PROGRESS),
-                createTestEntity(2L, InterviewPosition.MIDDLE, InterviewStatus.COMPLETED),
-                createTestEntity(null, InterviewPosition.SENIOR, InterviewStatus.EVALUATED)
-        );
-    }
-
-    private static Stream<InterviewMetadataModel> provideMetadataModelsForMapping() {
-        return Stream.of(
-                createTestModel(InterviewStatus.IN_PROGRESS),
-                createTestModel(InterviewStatus.COMPLETED),
-                createTestModel(InterviewStatus.EVALUATED)
-        );
-    }
-
-    private static InterviewMetadataEntity createTestEntity(Long id, InterviewPosition position, InterviewStatus status) {
-        return InterviewMetadataEntity.builder()
-                .id(id)
-                .interviewId(TEST_INTERVIEW_ID)
-                .userId(TEST_USER_ID)
-                .position(position)
-                .status(status)
-                .startTime(TEST_START_TIME)
-                .createdAt(TEST_CREATED_AT)
-                .updatedAt(TEST_UPDATED_AT)
-                .build();
-    }
-
-    private static InterviewMetadataModel createTestModel(InterviewStatus status) {
-        return InterviewMetadataModel.builder()
-                .id(TEST_ID)
-                .interviewId(TEST_INTERVIEW_ID)
-                .userId(TEST_USER_ID)
-                .position(InterviewPosition.MIDDLE)
-                .status(status)
-                .startTime(TEST_START_TIME)
-                .createdAt(TEST_CREATED_AT)
-                .updatedAt(TEST_UPDATED_AT)
-                .build();
     }
 }

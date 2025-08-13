@@ -1,6 +1,6 @@
 package com.mock.interview.userProfile.infrastructure.persistence.entity;
 
-import com.mock.interview.lib.entity.AbstractEntity;
+import com.mock.interview.lib.contract.AbstractEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

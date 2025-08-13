@@ -1,7 +1,9 @@
 package com.mock.interview.lib.model;
 
+import com.mock.interview.lib.contract.AbstractModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,43 +22,44 @@ import java.util.Set;
 @Setter
 @Builder
 @ToString(exclude = {
-        "passwordHash",
-        "roles"
+    "passwordHash",
+    "roles"
 })
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserModel implements Serializable {
-  private Long id;
+public class UserModel extends AbstractModel {
+    private Long id;
 
-  private String login;
+    private String login;
 
-  private String email;
+    private String email;
 
-  @Builder.Default
-  private boolean emailVerified = false;
+    @Builder.Default
+    private boolean emailVerified = false;
 
-  private String passwordHash;
+    private String passwordHash;
 
-  @Builder.Default
-  private boolean isActive = false;
+    @Builder.Default
+    private boolean isActive = false;
 
-  @Builder.Default
-  private LocalDateTime createdAt = LocalDateTime.now();
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-  @Builder.Default
-  private LocalDateTime updatedAt = LocalDateTime.now();
+    @Builder.Default
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
-  @Builder.Default
-  private Set<RoleModel> roles = new HashSet<>();
+    @Builder.Default
+    private Set<RoleModel> roles = new HashSet<>();
 
-  @Builder.Default
-  private List<UserOAuthProviderModel> oAuthProviderModelList = new ArrayList<>();
+    @Builder.Default
+    private List<UserOAuthProviderModel> oAuthProviderModelList = new ArrayList<>();
 
-  public void addOAuthProviderModel(UserOAuthProviderModel oAuthProviderModel) {
-    oAuthProviderModelList.add(oAuthProviderModel);
-  }
+    public void addOAuthProviderModel(UserOAuthProviderModel oAuthProviderModel) {
+        oAuthProviderModelList.add(oAuthProviderModel);
+    }
 
-  public boolean hasRole(String roleName) {
-    return roles.stream().anyMatch(role -> role.getName().equals(roleName));
-  }
+    public boolean hasRole(String roleName) {
+        return roles.stream().anyMatch(role -> role.getName().equals(roleName));
+    }
 }

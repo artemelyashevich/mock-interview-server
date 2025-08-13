@@ -1,6 +1,6 @@
 package com.mock.interview.auth.infrastructure.persistence.entity;
 
-import com.mock.interview.lib.entity.AbstractEntity;
+import com.mock.interview.lib.contract.AbstractEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,14 +29,14 @@ import java.util.Set;
 @AllArgsConstructor
 public class RoleEntity extends AbstractEntity implements Serializable {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column(nullable = false, unique = true)
-  private String name;
+    @Column(nullable = false, unique = true)
+    private String name;
 
-  @Builder.Default
-  @ManyToMany(mappedBy = "roles")
-  private Set<UserEntity> users = new HashSet<>();
+    @Builder.Default
+    @ManyToMany(mappedBy = "roles")
+    private Set<UserEntity> users = new HashSet<>();
 }

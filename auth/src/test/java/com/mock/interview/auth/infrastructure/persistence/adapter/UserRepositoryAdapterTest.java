@@ -46,8 +46,8 @@ class UserRepositoryAdapterTest {
 
         // Act & Assert
         ResourceNotFoundException exception = assertThrows(
-                ResourceNotFoundException.class,
-                () -> userRepositoryAdapter.findById(userId)
+            ResourceNotFoundException.class,
+            () -> userRepositoryAdapter.findById(userId)
         );
         assertEquals(String.format("User with id %s not found", userId), exception.getMessage());
         verify(userEntityRepository).findById(userId);
@@ -63,8 +63,8 @@ class UserRepositoryAdapterTest {
 
         // Act & Assert
         ResourceNotFoundException exception = assertThrows(
-                ResourceNotFoundException.class,
-                () -> userRepositoryAdapter.findByLogin(email)
+            ResourceNotFoundException.class,
+            () -> userRepositoryAdapter.findByLogin(email)
         );
         assertEquals(String.format("User with email %s not found", email), exception.getMessage());
         verify(userEntityRepository).findByLogin(email);

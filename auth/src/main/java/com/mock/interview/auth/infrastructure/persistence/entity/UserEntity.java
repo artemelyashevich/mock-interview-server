@@ -1,6 +1,6 @@
 package com.mock.interview.auth.infrastructure.persistence.entity;
 
-import com.mock.interview.lib.entity.AbstractEntity;
+import com.mock.interview.lib.contract.AbstractEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,7 +8,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -39,51 +38,51 @@ import java.util.Set;
 @AllArgsConstructor
 public class UserEntity extends AbstractEntity implements Serializable {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @NaturalId
-  @Column(nullable = false, unique = true)
-  private String login;
+    @NaturalId
+    @Column(nullable = false, unique = true)
+    private String login;
 
-  @NaturalId
-  @Column(unique = true)
-  private String email;
+    @NaturalId
+    @Column(unique = true)
+    private String email;
 
-  @Column(name = "password_hash")
-  private String passwordHash;
+    @Column(name = "password_hash")
+    private String passwordHash;
 
-  @Builder.Default
-  @Column(name = "is_active", nullable = false)
-  private boolean isActive = true;
+    @Builder.Default
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
 
-  @CreationTimestamp
-  @Column(name = "created_at", updatable = false)
-  private LocalDateTime createdAt;
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
-  @UpdateTimestamp
-  @Column(name = "updated_at")
-  private LocalDateTime updatedAt;
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
-  @Builder.Default
-  @Column(nullable = false, name = "email_verified")
-  private boolean emailVerified = false;
+    @Builder.Default
+    @Column(nullable = false, name = "email_verified")
+    private boolean emailVerified = false;
 
-  @Builder.Default
-  @OneToMany(mappedBy = "login", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<UserOAuthProviderEntity> oauthProviders = new ArrayList<>();
+    @Builder.Default
+    @OneToMany(mappedBy = "login", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserOAuthProviderEntity> oauthProviders = new ArrayList<>();
 
-  @Builder.Default
-  @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(
-          name = "user_roles",
-          joinColumns = @JoinColumn(name = "user_id"),
-          inverseJoinColumns = @JoinColumn(name = "role_id")
-  )
-  private Set<RoleEntity> roles = new HashSet<>();
+    @Builder.Default
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "user_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<RoleEntity> roles = new HashSet<>();
 
-  public void addProvider(UserOAuthProviderEntity provider) {
-    this.oauthProviders.add(provider);
-  }
+    public void addProvider(UserOAuthProviderEntity provider) {
+        this.oauthProviders.add(provider);
+    }
 }

@@ -92,9 +92,9 @@ public class SecurityServiceImpl implements SecurityService {
 
         return switch (provider) {
             case GOOGLE ->
-                    userOAuthProviderRepository.findByUserLoginAndProviderId(email, OAuthProvider.GOOGLE.getValue());
+                userOAuthProviderRepository.findByUserLoginAndProviderId(email, OAuthProvider.GOOGLE.getValue());
             case GITHUB ->
-                    userOAuthProviderRepository.findByUserLoginAndProviderId(login, OAuthProvider.GITHUB.getValue());
+                userOAuthProviderRepository.findByUserLoginAndProviderId(login, OAuthProvider.GITHUB.getValue());
             default -> Optional.empty();
         };
     }
@@ -111,20 +111,20 @@ public class SecurityServiceImpl implements SecurityService {
 
     private boolean shouldLinkNewProvider(UserModel user, String currentProviderId) {
         return user.getOAuthProviderModelList().size() == 1 &&
-                !user.getOAuthProviderModelList().getFirst().getProvider().equalsIgnoreCase(currentProviderId);
+            !user.getOAuthProviderModelList().getFirst().getProvider().equalsIgnoreCase(currentProviderId);
     }
 
     private void linkNewProvider(UserModel user, String currentProviderId) {
         var newProviderType = currentProviderId.equalsIgnoreCase(OAuthProvider.GOOGLE.getValue())
-                ? OAuthProvider.GITHUB
-                : OAuthProvider.GOOGLE;
+            ? OAuthProvider.GITHUB
+            : OAuthProvider.GOOGLE;
 
         var newProvider = UserOAuthProviderModel.builder()
-                .login(
-                        newProviderType.getValue().equalsIgnoreCase(OAuthProvider.GITHUB.getValue()) ?
-                                user.getLogin() : user.getEmail())
-                .provider(newProviderType.getValue().toUpperCase())
-                .build();
+            .login(
+                newProviderType.getValue().equalsIgnoreCase(OAuthProvider.GITHUB.getValue()) ?
+                    user.getLogin() : user.getEmail())
+            .provider(newProviderType.getValue().toUpperCase())
+            .build();
 
         var savedProvider = userOAuthProviderRepository.save(newProvider);
         user.addOAuthProviderModel(savedProvider);
@@ -162,13 +162,13 @@ public class SecurityServiceImpl implements SecurityService {
         var defaultRole = roleService.findByName("user");
 
         return builder
-                .roles(Set.of(
-                        RoleModel.builder()
-                                .id(defaultRole.getId())
-                                .name(defaultRole.getName())
-                                .build()
-                ))
-                .isActive(false)
-                .build();
+            .roles(Set.of(
+                RoleModel.builder()
+                    .id(defaultRole.getId())
+                    .name(defaultRole.getName())
+                    .build()
+            ))
+            .isActive(false)
+            .build();
     }
 }

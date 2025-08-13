@@ -16,36 +16,39 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("UserService Unit Tests")
 class UserServiceImplTest {
-
-    @Mock
-    private UserRepository userRepository;
-
-    @InjectMocks
-    private UserServiceImpl userService;
 
     // Test data
     private static final Long TEST_USER_ID = 1L;
     private static final String TEST_LOGIN = "testuser";
     private static final String TEST_EMAIL = "test@example.com";
     private static final UserModel TEST_USER = UserModel.builder()
-            .id(TEST_USER_ID)
-            .login(TEST_LOGIN)
-            .email(TEST_EMAIL)
-            .build();
+        .id(TEST_USER_ID)
+        .login(TEST_LOGIN)
+        .email(TEST_EMAIL)
+        .build();
+    @Mock
+    private UserRepository userRepository;
+    @InjectMocks
+    private UserServiceImpl userService;
 
     @Test
     @DisplayName("findById - existing user - returns user")
     void findById_ExistingUser_ReturnsUser() {
         // Arrange
         when(userRepository.findById(TEST_USER_ID))
-                .thenReturn(TEST_USER);
+            .thenReturn(TEST_USER);
 
         // Act
         UserModel result = userService.findById(TEST_USER_ID);
@@ -60,7 +63,7 @@ class UserServiceImplTest {
     void findByLogin_ExistingUser_ReturnsUser() {
         // Arrange
         when(userRepository.findByLogin(TEST_LOGIN))
-                .thenReturn(TEST_USER);
+            .thenReturn(TEST_USER);
 
         // Act
         UserModel result = userService.findByLogin(TEST_LOGIN);
@@ -75,16 +78,16 @@ class UserServiceImplTest {
     void save_ExistingLogin_ThrowsException() {
         // Arrange
         when(userRepository.existsByLogin(TEST_LOGIN))
-                .thenReturn(true);
+            .thenReturn(true);
 
         // Act & Assert
         ResourceAlreadyExistException exception = assertThrows(
-                ResourceAlreadyExistException.class,
-                () -> userService.save(TEST_USER)
+            ResourceAlreadyExistException.class,
+            () -> userService.save(TEST_USER)
         );
         assertEquals(
-                String.format("User with login %s already exists", TEST_LOGIN),
-                exception.getMessage()
+            String.format("User with login %s already exists", TEST_LOGIN),
+            exception.getMessage()
         );
         verify(userRepository).existsByLogin(TEST_LOGIN);
         verify(userRepository, never()).save(any());
@@ -95,16 +98,16 @@ class UserServiceImplTest {
     void delete_NonExistentUser_ThrowsException() {
         // Arrange
         when(userRepository.existsByLogin(TEST_LOGIN))
-                .thenReturn(false);
+            .thenReturn(false);
 
         // Act & Assert
         ResourceNotFoundException exception = assertThrows(
-                ResourceNotFoundException.class,
-                () -> userService.delete(TEST_USER)
+            ResourceNotFoundException.class,
+            () -> userService.delete(TEST_USER)
         );
         assertEquals(
-                String.format("User with login %s does not exist", TEST_LOGIN),
-                exception.getMessage()
+            String.format("User with login %s does not exist", TEST_LOGIN),
+            exception.getMessage()
         );
         verify(userRepository).existsByLogin(TEST_LOGIN);
         verify(userRepository, never()).delete(any());
@@ -116,25 +119,25 @@ class UserServiceImplTest {
     void update_ExistingUser_UpdatesAndReturnsUser() {
         // Arrange
         UserModel updatedUser = UserModel.builder()
-                .id(TEST_USER_ID)
-                .login("newlogin")
-                .email("new@example.com")
-                .oAuthProviderModelList(List.of(new UserOAuthProviderModel()))
-                .build();
+            .id(TEST_USER_ID)
+            .login("newlogin")
+            .email("new@example.com")
+            .oAuthProviderModelList(List.of(new UserOAuthProviderModel()))
+            .build();
 
         when(userRepository.findById(TEST_USER_ID))
-                .thenReturn(TEST_USER);
+            .thenReturn(TEST_USER);
         when(userRepository.save(any(UserModel.class)))
-                .thenReturn(updatedUser);
+            .thenReturn(updatedUser);
 
         // Act
         UserModel result = userService.update(updatedUser);
 
         // Assert
         assertAll(
-                () -> assertEquals(updatedUser.getLogin(), result.getLogin()),
-                () -> assertEquals(updatedUser.getEmail(), result.getEmail()),
-                () -> assertEquals(updatedUser.getOAuthProviderModelList(), result.getOAuthProviderModelList())
+            () -> assertEquals(updatedUser.getLogin(), result.getLogin()),
+            () -> assertEquals(updatedUser.getEmail(), result.getEmail()),
+            () -> assertEquals(updatedUser.getOAuthProviderModelList(), result.getOAuthProviderModelList())
         );
         verify(userRepository).findById(TEST_USER_ID);
         verify(userRepository).save(any(UserModel.class));

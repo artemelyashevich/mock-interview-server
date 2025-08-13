@@ -28,19 +28,19 @@ public class UserProfileRepositoryAdapter implements UserProfileRepository {
     @Override
     public UserProfileModel findById(Long id) {
         return userProfileEntityMapper.toModel(userProfileEntityRepository.findById(id)
-                .orElseThrow(() -> {
-                    var message = String.format("UserProfile with id %s not found", id);
-                    log.debug(message);
-                    return new ResourceNotFoundException(message);
-                }));
+            .orElseThrow(() -> {
+                var message = String.format("UserProfile with id %s not found", id);
+                log.debug(message);
+                return new ResourceNotFoundException(message);
+            }));
     }
 
     @Override
     public UserProfileModel save(UserProfileModel userProfileModel) {
         return userProfileEntityMapper.toModel(
-                userProfileEntityRepository.save(
-                        userProfileEntityMapper.toEntity(userProfileModel)
-                )
+            userProfileEntityRepository.save(
+                userProfileEntityMapper.toEntity(userProfileModel)
+            )
         );
     }
 

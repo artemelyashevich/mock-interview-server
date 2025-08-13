@@ -20,28 +20,28 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 @DisplayName("RoleRepositoryAdapter Unit Tests")
 class RoleRepositoryAdapterTest {
 
-  @Mock
-  private RoleEntityRepository roleEntityRepository;
+    @Mock
+    private RoleEntityRepository roleEntityRepository;
 
-  @Mock
-  private RoleEntityMapper roleEntityMapper;
+    @Mock
+    private RoleEntityMapper roleEntityMapper;
 
-  @InjectMocks
-  private RoleRepositoryAdapter roleRepositoryAdapter;
+    @InjectMocks
+    private RoleRepositoryAdapter roleRepositoryAdapter;
 
-  @Test
-  @DisplayName("delete - valid model - delegates to repository")
-  void delete_ValidModel_DelegatesToRepository() {
-    // Arrange
-    RoleModel model = RoleTestDataFactory.createRoleModel(1L, "TO_DELETE");
-    doNothing().when(roleEntityRepository).deleteById(model.getId());
+    @Test
+    @DisplayName("delete - valid model - delegates to repository")
+    void delete_ValidModel_DelegatesToRepository() {
+        // Arrange
+        RoleModel model = RoleTestDataFactory.createRoleModel(1L, "TO_DELETE");
+        doNothing().when(roleEntityRepository).deleteById(model.getId());
 
-    // Act
-    roleRepositoryAdapter.delete(model);
+        // Act
+        roleRepositoryAdapter.delete(model);
 
-    // Assert
-    verify(roleEntityRepository).deleteById(model.getId());
-    verifyNoMoreInteractions(roleEntityRepository);
-    verifyNoInteractions(roleEntityMapper);
-  }
+        // Assert
+        verify(roleEntityRepository).deleteById(model.getId());
+        verifyNoMoreInteractions(roleEntityRepository);
+        verifyNoInteractions(roleEntityMapper);
+    }
 }

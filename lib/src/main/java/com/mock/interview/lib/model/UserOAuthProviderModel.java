@@ -1,7 +1,9 @@
 package com.mock.interview.lib.model;
 
+import com.mock.interview.lib.contract.AbstractModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,16 +18,17 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserOAuthProviderModel implements Serializable {
+@EqualsAndHashCode(callSuper = false)
+public class UserOAuthProviderModel extends AbstractModel {
 
-  private Long id;
+    private Long id;
 
-  private String provider;
+    private String provider;
 
-  private String providerId;
+    private String providerId;
 
-  @Builder.Default
-  private LocalDateTime createdAt = LocalDateTime.now();
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-  private String login;
+    private String login;
 }

@@ -28,29 +28,29 @@ public class InterviewMetadataRepositoryAdapter implements InterviewMetadataRepo
     @Override
     public List<InterviewMetadataModel> findByUserId(Long userId) {
         return interviewMetadataEntityMapper.toModels(
-                interviewMetadataEntityRepository.findAllByUserId(userId)
+            interviewMetadataEntityRepository.findAllByUserId(userId)
         );
     }
 
     @Override
     public InterviewMetadataModel findById(Long id) {
         return interviewMetadataEntityMapper.toModel(
-                interviewMetadataEntityRepository.findById(id).orElseThrow(
-                        () -> {
-                            var message = String.format("Interview Metadata Entity with id %s not found", id);
-                            log.debug(message);
-                            return new ResourceNotFoundException(message);
-                        }
-                )
+            interviewMetadataEntityRepository.findById(id).orElseThrow(
+                () -> {
+                    var message = String.format("Interview Metadata Entity with id %s not found", id);
+                    log.debug(message);
+                    return new ResourceNotFoundException(message);
+                }
+            )
         );
     }
 
     @Override
     public InterviewMetadataModel save(InterviewMetadataModel interviewMetadataModel) {
         return interviewMetadataEntityMapper.toModel(
-                interviewMetadataEntityRepository.save(
-                        interviewMetadataEntityMapper.toEntity(interviewMetadataModel)
-                )
+            interviewMetadataEntityRepository.save(
+                interviewMetadataEntityMapper.toEntity(interviewMetadataModel)
+            )
         );
     }
 

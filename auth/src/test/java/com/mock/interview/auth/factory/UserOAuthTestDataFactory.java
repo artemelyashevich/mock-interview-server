@@ -10,18 +10,18 @@ public class UserOAuthTestDataFactory {
 
     public static UserOAuthProviderEntity createOAuthEntity(Long id, String provider) {
         return UserOAuthProviderEntity.builder()
-                .id(id)
-                .provider(OAuthProvider.valueOf(provider.toUpperCase()))
-                .createdAt(LocalDateTime.now())
-                .build();
+            .id(id)
+            .provider(OAuthProvider.valueOf(provider.toUpperCase()))
+            .createdAt(LocalDateTime.now())
+            .build();
     }
 
     public static UserOAuthProviderModel createOAuthModel(Long id, String provider) {
         return UserOAuthProviderModel.builder()
-                .id(id)
-                .provider(OAuthProvider.valueOf(provider.toUpperCase()).getValue())
-                .createdAt(LocalDateTime.now())
-                .build();
+            .id(id)
+            .provider(OAuthProvider.valueOf(provider.toUpperCase()).getValue())
+            .createdAt(LocalDateTime.now())
+            .build();
     }
 
     public static UserOAuthProviderEntity createDefaultOAuthEntity() {

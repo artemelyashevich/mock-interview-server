@@ -23,17 +23,17 @@ public class UserOAuthProviderRepositoryAdapter implements UserOAuthProviderRepo
     @Override
     public Optional<UserOAuthProviderModel> findByUserLoginAndProviderId(String userLogin, String providerId) {
         return userOAuthProviderRepository.findByLoginAndProvider(userLogin, OAuthProvider.valueOf(providerId.toUpperCase()))
-                .map(userOauthProviderEntityMapper::toModel);
+            .map(userOauthProviderEntityMapper::toModel);
     }
 
     @Override
     public UserOAuthProviderModel save(UserOAuthProviderModel userOAuthProviderModel) {
         return userOauthProviderEntityMapper.toModel(
-                userOAuthProviderRepository.save(
-                        userOauthProviderEntityMapper.toEntity(
-                                userOAuthProviderModel
-                        )
+            userOAuthProviderRepository.save(
+                userOauthProviderEntityMapper.toEntity(
+                    userOAuthProviderModel
                 )
+            )
         );
     }
 }

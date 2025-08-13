@@ -8,13 +8,13 @@ import java.util.Optional;
 
 public interface RoleRepository {
 
-  Optional<RoleEntity> findByName(String name);
+    Optional<RoleEntity> findByName(String name);
 
-  List<RoleModel> findAll();
+    List<RoleModel> findAll();
 
-  boolean existsByName(String name);
+    boolean existsByName(String name);
 
-  RoleModel save(RoleModel roleModel);
+    RoleModel save(RoleModel roleModel);
 
-  void delete(RoleModel roleModel);
+    void delete(RoleModel roleModel);
 }

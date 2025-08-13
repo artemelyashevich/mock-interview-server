@@ -19,19 +19,19 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    return http
+        return http
             .authorizeHttpRequests(auth ->
-                    auth
-                            .requestMatchers("/api/v1/auth/**").permitAll()
-                            .anyRequest().authenticated()
+                auth
+                    .requestMatchers("/api/v1/auth/**").permitAll()
+                    .anyRequest().authenticated()
             )
             .oauth2Login(oauth2Login -> {
-              oauth2Login.successHandler(
-                      (request, response, authentication) -> {
-                            securityService.authenticate(authentication);
-                      }
-              );
+                oauth2Login.successHandler(
+                    (request, response, authentication) -> {
+                        securityService.authenticate(authentication);
+                    }
+                );
             })
             .build();
-  }
+    }
 }

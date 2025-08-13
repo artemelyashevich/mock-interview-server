@@ -1,5 +1,6 @@
 package com.mock.interview.lib.model;
 
+import com.mock.interview.lib.contract.AbstractModel;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,33 +17,33 @@ import java.util.Objects;
 @With
 @Getter
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Builder(toBuilder = true)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class InterviewMetadataModel {
-    
+@AllArgsConstructor
+public class InterviewMetadataModel extends AbstractModel {
+
     @EqualsAndHashCode.Include
-    private final Long id;
-    
+    private Long id;
+
     @NonNull
-    private final Long interviewId;
-    
+    private Long interviewId;
+
     @NonNull
-    private final Long userId;
-    
+    private Long userId;
+
     @NonNull
-    private final InterviewPosition position;
-    
+    private InterviewPosition position;
+
+    @NonNull
+    private LocalDateTime startTime;
+
     @NonNull
     @Setter
     private InterviewStatus status;
-    
-    @NonNull
-    private final LocalDateTime startTime;
-    
+
     @Builder.Default
-    private final LocalDateTime createdAt = LocalDateTime.now();
-    
+    private LocalDateTime createdAt = LocalDateTime.now();
+
     @Setter
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();

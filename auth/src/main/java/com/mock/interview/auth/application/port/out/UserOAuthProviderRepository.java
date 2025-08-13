@@ -5,7 +5,7 @@ import com.mock.interview.lib.model.UserOAuthProviderModel;
 import java.util.Optional;
 
 public interface UserOAuthProviderRepository {
-  Optional<UserOAuthProviderModel> findByUserLoginAndProviderId(String userLogin, String providerId);
+    Optional<UserOAuthProviderModel> findByUserLoginAndProviderId(String userLogin, String providerId);
 
-  UserOAuthProviderModel save(UserOAuthProviderModel userOAuthProviderModel);
+    UserOAuthProviderModel save(UserOAuthProviderModel userOAuthProviderModel);
 }

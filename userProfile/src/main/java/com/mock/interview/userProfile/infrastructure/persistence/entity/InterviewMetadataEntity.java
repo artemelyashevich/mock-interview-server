@@ -1,6 +1,6 @@
 package com.mock.interview.userProfile.infrastructure.persistence.entity;
 
-import com.mock.interview.lib.entity.AbstractEntity;
+import com.mock.interview.lib.contract.AbstractEntity;
 import com.mock.interview.lib.model.InterviewPosition;
 import com.mock.interview.lib.model.InterviewStatus;
 import jakarta.persistence.Column;

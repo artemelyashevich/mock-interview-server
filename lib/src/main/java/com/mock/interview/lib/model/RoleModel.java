@@ -1,7 +1,9 @@
 package com.mock.interview.lib.model;
 
+import com.mock.interview.lib.contract.AbstractModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,8 +17,9 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoleModel implements Serializable {
-  private Long id;
+@EqualsAndHashCode(callSuper = false)
+public class RoleModel extends AbstractModel {
+    private Long id;
 
-  private String name;
+    private String name;
 }

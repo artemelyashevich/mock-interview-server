@@ -19,36 +19,33 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("SecurityService Unit Tests")
 class SecurityServiceImplTest {
-
-    @Mock
-    private UserService userService;
-
-    @Mock
-    private UserOAuthProviderRepository userOAuthProviderRepository;
-
-    @Mock
-    private RoleService roleService;
-
-    @InjectMocks
-    private SecurityServiceImpl securityService;
 
     // Test data
     private static final String TEST_EMAIL = "test@example.com";
     private static final String TEST_LOGIN = "testuser";
     private static final String GOOGLE_PROVIDER = "google";
     private static final String GITHUB_PROVIDER = "github";
+    @Mock
+    private UserService userService;
+    @Mock
+    private UserOAuthProviderRepository userOAuthProviderRepository;
+    @Mock
+    private RoleService roleService;
+    @InjectMocks
+    private SecurityServiceImpl securityService;
 
     @Test
     @DisplayName("findCurrentUser - Google authentication - returns user by email")
@@ -77,7 +74,7 @@ class SecurityServiceImplTest {
         var authToken = new OAuth2AuthenticationToken(principal, null, GOOGLE_PROVIDER);
 
         when(userOAuthProviderRepository.findByUserLoginAndProviderId(TEST_EMAIL, GOOGLE_PROVIDER))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         var role = new RoleModel();
         role.setName("user");

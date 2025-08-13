@@ -21,6 +21,5 @@ spring:
       ddl-auto: validate
     open-in-view: false
 
-
 server:
-  port: 8113
+  port: 8112

@@ -16,7 +16,7 @@
         </processorPath>
         <module name="lib" />
       </profile>
-      <profile name="Annotation profile for userProfile" enabled="true">
+      <profile name="Annotation profile for interview" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -25,6 +25,7 @@
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.6.3/mapstruct-processor-1.6.3.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.6.3/mapstruct-1.6.3.jar" />
         </processorPath>
+        <module name="interview" />
         <module name="auth" />
         <module name="userProfile" />
       </profile>
@@ -33,6 +34,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="auth" options="-parameters" />
+      <module name="interview" options="-parameters" />
       <module name="userProfile" options="-parameters" />
     </option>
   </component>

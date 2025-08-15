@@ -6,13 +6,19 @@ import java.util.List;
 
 public interface InterviewQuestionRepository {
 
-    List<InterviewQuestionModel> findAll();
+    List<InterviewQuestionModel> findAllByInterviewId(Long interviewId);
 
-    InterviewQuestionModel findById(Long id);
+    List<InterviewQuestionModel> findAllByInterviewIdAndTopic(Long interviewId, String topic);
 
-    List<InterviewQuestionModel> findByInterviewId(Long id);
+    InterviewQuestionModel save(InterviewQuestionModel question);
 
-    InterviewQuestionModel save(InterviewQuestionModel interviewQuestionModel);
+    void deleteAllByInterviewId(Long interviewId);
 
-    void delete(InterviewQuestionModel interviewQuestionModel);
+    InterviewQuestionModel findLatestByInterviewId(Long interviewId);
+
+    InterviewQuestionModel findNextQuestion(Long interviewId);
+
+    Long countByInterviewId(Long interviewId);
+
+    Double calculateAverageScoreByInterviewId(Long interviewId);
 }

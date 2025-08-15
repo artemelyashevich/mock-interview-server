@@ -51,4 +51,3 @@ public class InterviewQuestionEntity extends AbstractEntity {
     @Column(name = "order_index")
     private Integer orderIndex;
 }
-

@@ -8,6 +8,13 @@
   <name>Archetype - lib</name>
   <packaging>jar</packaging>
 
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.5.4</version>
+    <relativePath/> <!-- lookup parent from repository -->
+  </parent>
+
   <properties>
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
@@ -25,6 +32,15 @@
       <artifactId>lombok</artifactId>
       <version>1.18.34</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.nats</groupId>
+      <artifactId>jnats</artifactId>
+      <version>2.21.2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
     </dependency>
   </dependencies>
 

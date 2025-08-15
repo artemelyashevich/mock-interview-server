@@ -8,6 +8,7 @@
         <option value="$PROJECT_DIR$/lib/pom.xml" />
         <option value="$PROJECT_DIR$/userProfile/pom.xml" />
         <option value="$PROJECT_DIR$/interview/pom.xml" />
+        <option value="$PROJECT_DIR$/notification/pom.xml" />
       </list>
     </option>
   </component>

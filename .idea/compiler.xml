@@ -12,11 +12,11 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
         <module name="lib" />
+        <module name="notification" />
       </profile>
-      <profile name="Annotation profile for interview" enabled="true">
+      <profile name="Annotation profile for userProfile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -35,6 +35,8 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="auth" options="-parameters" />
       <module name="interview" options="-parameters" />
+      <module name="lib" options="-parameters" />
+      <module name="notification" options="-parameters" />
       <module name="userProfile" options="-parameters" />
     </option>
   </component>

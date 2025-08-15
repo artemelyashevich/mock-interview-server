@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: notification-service
+  config:
+    import: optional:file:.env[properties]
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_SENDER}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    sender:
+      email: ${MAIL_SENDER}
+server:
+  port: 8114
+
+twilio.account.sid: ${TWILIO_ACCOUNT_SID}
+twilio.auth.token: ${TWILIO_AUTH_TOKEN}
+twilio.phone.number: ${TWILIO_PHONE_NUMBER}

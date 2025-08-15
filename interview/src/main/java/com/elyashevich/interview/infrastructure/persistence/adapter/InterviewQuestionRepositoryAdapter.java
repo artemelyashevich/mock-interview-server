@@ -1,6 +1,7 @@
 package com.elyashevich.interview.infrastructure.persistence.adapter;
 
 import com.elyashevich.interview.application.port.out.InterviewQuestionRepository;
+import com.elyashevich.interview.application.port.out.InterviewRepository;
 import com.elyashevich.interview.infrastructure.persistence.mapper.InterviewQuestionEntityMapper;
 import com.elyashevich.interview.infrastructure.persistence.repository.InterviewQuestionEntityRepository;
 import com.mock.interview.lib.exception.ResourceNotFoundException;
@@ -21,6 +22,7 @@ public class InterviewQuestionRepositoryAdapter implements InterviewQuestionRepo
     private static final String NO_QUESTIONS_FOUND_MSG = "No questions found for interview id: %d";
 
     private final InterviewQuestionEntityRepository repository;
+    private final InterviewRepository interviewRepository;
 
     @Override
     public List<InterviewQuestionModel> findAllByInterviewId(Long interviewId) {
@@ -76,6 +78,15 @@ public class InterviewQuestionRepositoryAdapter implements InterviewQuestionRepo
     public Double calculateAverageScoreByInterviewId(Long interviewId) {
         validateInterviewId(interviewId);
         return repository.calculateAverageScoreByInterviewId(interviewId);
+    }
+
+    @Override
+    public InterviewQuestionModel findById(Long id) {
+        return repository.findById(id)
+            .map(MAPPER::toModel)
+            .orElseThrow(
+                () -> createNotFoundException(id)
+            );
     }
 
     private ResourceNotFoundException createNotFoundException(Long interviewId) {

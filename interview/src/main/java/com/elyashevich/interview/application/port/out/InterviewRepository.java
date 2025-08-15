@@ -23,4 +23,6 @@ public interface InterviewRepository {
     InterviewModel save(InterviewModel interviewModel);
 
     void delete(InterviewModel interviewModel);
+
+    InterviewModel findById(Long interviewId);
 }

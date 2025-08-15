@@ -23,6 +23,7 @@ public class InterviewRepositoryAdapter implements InterviewRepository {
     private static final String INTERVIEW_NOT_FOUND_MSG = "Cannot find interview with id %d and user id %d";
 
     private final InterviewEntityRepository interviewEntityRepository;
+    private final InterviewRepository interviewRepository;
 
     @Override
     public List<InterviewModel> findAllByStatus(InterviewStatus status) {
@@ -100,6 +101,17 @@ public class InterviewRepositoryAdapter implements InterviewRepository {
         Objects.requireNonNull(interviewModel.getId(), "Interview id cannot be null");
 
         interviewEntityRepository.deleteById(interviewModel.getId().value());
+    }
+
+    @Override
+    public InterviewModel findById(Long interviewId) {
+        return interviewEntityRepository.findById(interviewId)
+            .map(INTERVIEW_ENTITY_MAPPER::toModel)
+            .orElseThrow(()-> {
+                var message = String.format(INTERVIEW_NOT_FOUND_MSG, interviewId);
+                log.debug(message);
+                return new ResourceNotFoundException(message);
+            });
     }
 
     private void validateUserId(Long userId) {

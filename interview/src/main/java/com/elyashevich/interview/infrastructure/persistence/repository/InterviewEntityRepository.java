@@ -16,9 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-/**
- * JPA repository for interview entities with custom queries.
- */
+
 public interface InterviewEntityRepository extends JpaRepository<InterviewEntity, Long> {
 
     List<InterviewEntity> findAllByStatus(InterviewStatus status);
@@ -33,7 +31,7 @@ public interface InterviewEntityRepository extends JpaRepository<InterviewEntity
     Optional<InterviewEntity> findByIdAndUserId(Long id, Long userId);
 
     @Query("""
-        SELECT i FROM InterviewEntity i 
+        SELECT i FROM InterviewEntity i
         WHERE i.startTime BETWEEN :start AND :end 
         ORDER BY i.startTime ASC
         """)

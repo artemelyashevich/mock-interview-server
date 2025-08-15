@@ -21,4 +21,6 @@ public interface InterviewQuestionRepository {
     Long countByInterviewId(Long interviewId);
 
     Double calculateAverageScoreByInterviewId(Long interviewId);
+
+    InterviewQuestionModel findById(Long id);
 }

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.With;
 
@@ -13,6 +14,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @With
+@Setter
 @Getter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
@@ -34,7 +36,7 @@ public class InterviewQuestionModel extends AbstractModel {
     @NonNull
     private String topic;
     
-    private Evaluation evaluation;
+    private EvaluationModel evaluation;
     
     @NonNull
     private Integer orderIndex;
@@ -43,7 +45,7 @@ public class InterviewQuestionModel extends AbstractModel {
         this.answerText = Objects.requireNonNull(answer);
     }
 
-    public void evaluate(Evaluation evaluation) {
+    public void evaluate(EvaluationModel evaluation) {
         if (answerText == null) {
             throw new IllegalStateException("Cannot evaluate unanswered question");
         }
@@ -59,17 +61,4 @@ public class InterviewQuestionModel extends AbstractModel {
     }
 
     public record InterviewId(Long value) implements Serializable {}
-    
-    public record Evaluation(
-        Double score,
-        String feedback
-    ) implements Serializable {
-        public Evaluation {
-            Objects.requireNonNull(score);
-            Objects.requireNonNull(feedback);
-            if (score < 0 || score > 5) {
-                throw new IllegalArgumentException("Score must be between 0 and 5");
-            }
-        }
-    }
 }

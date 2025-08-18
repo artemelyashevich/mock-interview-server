@@ -1,12 +1,14 @@
 package com.elyashevich.interview.application.service;
 
 import com.elyashevich.interview.application.port.in.InterviewService;
+import com.elyashevich.interview.application.port.in.NotificationService;
 import com.elyashevich.interview.application.port.out.InterviewRepository;
 import com.mock.interview.lib.exception.MockInterviewException;
 import com.mock.interview.lib.exception.ResourceAlreadyExistException;
 import com.mock.interview.lib.model.InterviewModel;
 import com.mock.interview.lib.model.InterviewQuestionModel;
 import com.mock.interview.lib.model.InterviewStatus;
+import com.mock.interview.lib.model.NotificationModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class InterviewServiceImpl implements InterviewService {
 
     private final InterviewRepository interviewEntityRepository;
+    private final NotificationService notificationService;
 
     // TODO
     @Override
@@ -26,6 +29,7 @@ public class InterviewServiceImpl implements InterviewService {
         log.debug("Create Interview");
 
         var interview = interviewEntityRepository.save(interviewModel);
+        notificationService.send(NotificationModel.builder().build());
         return null;
     }
 

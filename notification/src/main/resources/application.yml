@@ -16,6 +16,12 @@ spring:
             enable: true
     sender:
       email: ${MAIL_SENDER}
+  kafka:
+    consumer:
+      isolation-level: read_committed
+      enable-auto-commit: false
+    listener:
+      default-retry-template: false
 server:
   port: 8114
 

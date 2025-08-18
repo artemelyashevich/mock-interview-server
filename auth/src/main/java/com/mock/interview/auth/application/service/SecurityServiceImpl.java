@@ -1,11 +1,14 @@
 package com.mock.interview.auth.application.service;
 
+import com.mock.interview.auth.application.port.in.NotificationService;
 import com.mock.interview.auth.application.port.in.RoleService;
 import com.mock.interview.auth.application.port.in.SecurityService;
 import com.mock.interview.auth.application.port.in.UserService;
 import com.mock.interview.auth.application.port.out.UserOAuthProviderRepository;
 import com.mock.interview.auth.infrastructure.persistence.entity.OAuthProvider;
 import com.mock.interview.lib.exception.MockInterviewException;
+import com.mock.interview.lib.model.NotificationModel;
+import com.mock.interview.lib.model.NotificationType;
 import com.mock.interview.lib.model.RoleModel;
 import com.mock.interview.lib.model.UserModel;
 import com.mock.interview.lib.model.UserOAuthProviderModel;
@@ -30,6 +33,7 @@ public class SecurityServiceImpl implements SecurityService {
     private final UserService userService;
     private final UserOAuthProviderRepository userOAuthProviderRepository;
     private final RoleService roleService;
+    private final NotificationService notificationService;
 
     @Override
     public UserModel findCurrentUser() {
@@ -145,6 +149,12 @@ public class SecurityServiceImpl implements SecurityService {
                 String email = principal.getAttribute("email");
                 userBuilder.login(email).email(email);
                 providerBuilder.provider(OAuthProvider.GOOGLE.getValue().toUpperCase());
+                notificationService.send(NotificationModel.builder()
+                        .content("You have been successfully logged in")
+                        .receiver(email)
+                        .type(NotificationType.EMAIL)
+                        .rule("LogIn")
+                    .build());
             }
             default -> throw new MockInterviewException("Unsupported OAuth provider: " + provider, 500);
         }

@@ -64,7 +64,6 @@ public class InterviewModel extends AbstractModel {
         this.questions.add(question);
     }
 
-    // Value objects for strong typing
     public record InterviewId(Long value) implements Serializable {
     }
 

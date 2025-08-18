@@ -1,6 +1,7 @@
 package com.mock.interview.lib.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mock.interview.lib.exception.MockInterviewException;
 import lombok.experimental.UtilityClass;
 
 import java.util.Objects;
@@ -49,14 +50,12 @@ public class JsonHelper {
         }
     }
 
-    public static <T> T parseString(String json, Class<T> valueClass) throws JsonHelperException {
+    public static <T> T parseString(String json, Class<T> valueClass) {
         try {
             Objects.requireNonNull(json, "json is null");
             return (T)mapper.readValue(json, valueClass);
         } catch (Exception e) {
-            throw new JsonHelperException("Can't parse string '" + json + "'", e);
+            throw new MockInterviewException("Can't parse string '" + json + "'", 500);
         }
     }
-
-
 }

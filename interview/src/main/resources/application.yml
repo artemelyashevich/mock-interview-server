@@ -21,5 +21,11 @@ spring:
       ddl-auto: validate
     open-in-view: false
 
+app:
+  kafka:
+    topic:
+      name: notifications
+    transaction-id-prefix: kafka-transactions
+
 server:
   port: 8112

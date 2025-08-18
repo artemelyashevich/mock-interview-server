@@ -38,5 +38,11 @@ spring:
             token-uri: https://oauth2.googleapis.com/token
             user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
 
+app:
+  kafka:
+    topic:
+      name: notifications
+    transaction-id-prefix: kafka-transactions
+
 server:
   port: 8111

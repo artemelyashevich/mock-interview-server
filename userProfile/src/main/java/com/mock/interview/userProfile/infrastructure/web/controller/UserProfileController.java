@@ -2,7 +2,9 @@ package com.mock.interview.userProfile.infrastructure.web.controller;
 
 import com.mock.interview.lib.exception.ExceptionBody;
 import com.mock.interview.lib.model.UserProfileModel;
+import com.mock.interview.lib.specification.SearchCriteria;
 import com.mock.interview.userProfile.application.port.in.UserProfileService;
+import com.mock.interview.userProfile.infrastructure.persistence.mapper.UserProfileEntityMapper;
 import com.mock.interview.userProfile.infrastructure.web.dto.UserProfileDto;
 import com.mock.interview.userProfile.infrastructure.web.mapper.UserProfileDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +33,7 @@ import java.util.List;
 public class UserProfileController {
 
     private static final UserProfileDtoMapper userProfileDtoMapper = UserProfileDtoMapper.INSTANCE;
+    private static final UserProfileEntityMapper userProfileEntityMapper = UserProfileEntityMapper.INSTANCE;
 
     private final UserProfileService userProfileService;
 
@@ -48,6 +52,18 @@ public class UserProfileController {
     @GetMapping
     public List<UserProfileModel> findAll() {
         return userProfileService.findAll();
+    }
+
+    @PostMapping("/search")
+    public Page<UserProfileModel> search(@RequestBody SearchCriteria searchCriteria) {
+        return userProfileService.search(searchCriteria).map(userProfileEntityMapper::toModel);
+    }
+
+    @PostMapping("/searchAll")
+    public List<UserProfileModel> searchAll(@RequestBody SearchCriteria searchCriteria) {
+        return userProfileService.searchAll(searchCriteria).stream()
+                .map(userProfileEntityMapper::toModel)
+                .toList();
     }
 
     @Operation(

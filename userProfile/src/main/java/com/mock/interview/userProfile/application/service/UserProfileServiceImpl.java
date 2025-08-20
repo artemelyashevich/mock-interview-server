@@ -1,10 +1,15 @@
 package com.mock.interview.userProfile.application.service;
 
 import com.mock.interview.lib.model.UserProfileModel;
+import com.mock.interview.lib.specification.GenericSpecificationRepository;
+import com.mock.interview.lib.specification.GenericSpecificationService;
+import com.mock.interview.lib.specification.SearchCriteria;
 import com.mock.interview.userProfile.application.port.in.UserProfileService;
 import com.mock.interview.userProfile.application.port.out.UserProfileRepository;
+import com.mock.interview.userProfile.infrastructure.persistence.entity.UserProfileEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +19,8 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserProfileServiceImpl implements UserProfileService {
+public class UserProfileServiceImpl extends GenericSpecificationService<UserProfileEntity, Long>
+        implements UserProfileService {
 
     private final UserProfileRepository userProfileRepository;
 
@@ -58,5 +64,11 @@ public class UserProfileServiceImpl implements UserProfileService {
         userProfileRepository.delete(profile);
 
         log.debug("Deleted user profile {}", id);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    protected GenericSpecificationRepository<UserProfileEntity, Long> getRepository() {
+        return (GenericSpecificationRepository<UserProfileEntity, Long>) this.userProfileRepository;
     }
 }

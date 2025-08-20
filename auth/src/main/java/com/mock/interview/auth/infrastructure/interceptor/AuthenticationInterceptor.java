@@ -1,7 +1,7 @@
 package com.mock.interview.auth.infrastructure.interceptor;
 
 import com.mock.interview.auth.application.port.in.UserService;
-import com.mock.interview.lib.annotation.SecurityRequired;
+import com.mock.interview.lib.annotation.AuthorizationRequired;
 import com.mock.interview.lib.exception.MockInterviewException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,7 +42,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     }
 
     // FIXME: extract from token
-    private void authenticate(SecurityRequired securityRequired, HttpServletRequest request) {
+    private void authenticate(AuthorizationRequired securityRequired, HttpServletRequest request) {
         var role = securityRequired.roles();
         var user = userService.findByLogin(request.getParameter("login"));
 
@@ -54,9 +54,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     private MethodAnnotations getMethodOrClassAnnotation(HandlerMethod handlerMethod) {
         return methodAnnotationMap.computeIfAbsent(handlerMethod.getMethod(), m -> {
             var methodAnnotations = new MethodAnnotations();
-            var securityRequired = handlerMethod.getMethod().getAnnotation(SecurityRequired.class);
+            var securityRequired = handlerMethod.getMethod().getAnnotation(AuthorizationRequired.class);
             if (securityRequired == null) {
-                securityRequired = handlerMethod.getBeanType().getAnnotation(SecurityRequired.class);
+                securityRequired = handlerMethod.getBeanType().getAnnotation(AuthorizationRequired.class);
             }
             methodAnnotations.setSecurityRequired(securityRequired);
             return methodAnnotations;
@@ -66,6 +66,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Getter
     @Setter
     private static class MethodAnnotations {
-        SecurityRequired securityRequired;
+        AuthorizationRequired securityRequired;
     }
 }

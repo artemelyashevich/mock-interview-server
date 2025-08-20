@@ -3,6 +3,7 @@ package com.elyashevich.interview.infrastructure.persistence.repository;
 import com.elyashevich.interview.infrastructure.persistence.entity.InterviewEntity;
 import com.mock.interview.lib.model.InterviewProjection;
 import com.mock.interview.lib.model.InterviewStatus;
+import com.mock.interview.lib.specification.GenericSpecificationRepository;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,7 +18,7 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface InterviewEntityRepository extends JpaRepository<InterviewEntity, Long> {
+public interface InterviewEntityRepository extends GenericSpecificationRepository<InterviewEntity, Long> {
 
     List<InterviewEntity> findAllByStatus(InterviewStatus status);
 

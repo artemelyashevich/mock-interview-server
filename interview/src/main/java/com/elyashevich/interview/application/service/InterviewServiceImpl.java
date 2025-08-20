@@ -3,22 +3,29 @@ package com.elyashevich.interview.application.service;
 import com.elyashevich.interview.application.port.in.InterviewService;
 import com.elyashevich.interview.application.port.in.NotificationService;
 import com.elyashevich.interview.application.port.out.InterviewRepository;
+import com.elyashevich.interview.infrastructure.persistence.entity.InterviewEntity;
 import com.mock.interview.lib.exception.MockInterviewException;
 import com.mock.interview.lib.exception.ResourceAlreadyExistException;
 import com.mock.interview.lib.model.InterviewModel;
 import com.mock.interview.lib.model.InterviewQuestionModel;
 import com.mock.interview.lib.model.InterviewStatus;
 import com.mock.interview.lib.model.NotificationModel;
+import com.mock.interview.lib.specification.GenericSpecificationRepository;
+import com.mock.interview.lib.specification.GenericSpecificationService;
+import com.mock.interview.lib.specification.SearchCriteria;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class InterviewServiceImpl implements InterviewService {
+public class InterviewServiceImpl extends GenericSpecificationService<InterviewEntity, Long> implements InterviewService  {
 
     private final InterviewRepository interviewEntityRepository;
     private final NotificationService notificationService;
@@ -112,5 +119,11 @@ public class InterviewServiceImpl implements InterviewService {
 
         interviewEntityRepository.save(interview);
         log.debug("Update Interview");
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    protected GenericSpecificationRepository<InterviewEntity, Long> getRepository() {
+        return (GenericSpecificationRepository<InterviewEntity, Long>) interviewEntityRepository;
     }
 }

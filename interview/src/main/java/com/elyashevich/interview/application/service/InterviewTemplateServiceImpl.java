@@ -17,11 +17,21 @@ public class InterviewTemplateServiceImpl implements InterviewTemplateService {
 
     @Override
     public InterviewTemplateModel create(InterviewTemplateModel interviewTemplateModel) {
-        return null;
+        log.debug("Attempting create new interview template");
+
+        var interviewTemplate = interviewTemplateRepository.save(interviewTemplateModel);
+
+        log.debug("Created new interview template");
+        return interviewTemplate;
     }
 
     @Override
     public InterviewQuestionModel clone(Long id, String newTitle) {
         return null;
+    }
+
+    @Override
+    public InterviewTemplateModel findById(Long templateId) {
+        return interviewTemplateRepository.findById(templateId);
     }
 }

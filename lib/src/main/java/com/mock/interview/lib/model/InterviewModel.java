@@ -25,15 +25,17 @@ public class InterviewModel extends AbstractModel {
     @EqualsAndHashCode.Include
     private InterviewId id;
 
-    private UserId userId;
+    private Long userId;
 
-    private InterviewTemplateId templateId;
+    private Long templateId;
 
     @Setter
     private InterviewStatus status;
 
+    @Setter
     private LocalDateTime startTime;
 
+    @Setter
     private LocalDateTime endTime;
 
     @Setter
@@ -42,7 +44,7 @@ public class InterviewModel extends AbstractModel {
     @Builder.Default
     private List<InterviewQuestionModel> questions = Collections.emptyList();
 
-    private ReportId reportId;
+    private Long reportId;
 
     public boolean isInProgress() {
         return status == InterviewStatus.IN_PROGRESS;

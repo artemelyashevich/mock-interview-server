@@ -16,7 +16,7 @@
         <module name="lib" />
         <module name="notification" />
       </profile>
-      <profile name="Annotation profile for interview" enabled="true">
+      <profile name="Annotation profile for userProfile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />

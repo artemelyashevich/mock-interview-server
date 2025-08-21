@@ -45,7 +45,7 @@ public class EmailServiceImpl implements EmailService {
             ));
 
             helper.setFrom(senderEmail);
-            helper.setTo(notificationModel.getReceiver());
+            helper.setTo(notificationModel.getSendTo());
             helper.setSubject(notificationModel.getRule());
 
             var template = this.templateEngine.process(notificationModel.getRule(), context);

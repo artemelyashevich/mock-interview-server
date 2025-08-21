@@ -20,9 +20,11 @@ import lombok.With;
 @NoArgsConstructor
 public class NotificationModel extends AbstractModel {
 
+    private String topic;
+
     private String content;
 
-    private String receiver;
+    private String sendTo;
 
     private String rule;
 

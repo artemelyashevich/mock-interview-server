@@ -151,7 +151,7 @@ public class SecurityServiceImpl implements SecurityService {
                 providerBuilder.provider(OAuthProvider.GOOGLE.getValue().toUpperCase());
                 notificationService.send(NotificationModel.builder()
                         .content("You have been successfully logged in")
-                        .receiver(email)
+                        .sendTo(email)
                         .type(NotificationType.EMAIL)
                         .rule("LogIn")
                     .build());

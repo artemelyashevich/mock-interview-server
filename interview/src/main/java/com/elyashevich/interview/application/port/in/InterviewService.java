@@ -7,10 +7,13 @@ import com.mock.interview.lib.specification.SearchCriteria;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public interface InterviewService {
 
     InterviewModel create(InterviewModel interviewModel);
+
+    CompletableFuture<List<InterviewModel>> batchSaveAsync(List<InterviewModel> interviews);
 
     InterviewModel addQuestion(Long interviewId, Long userId, InterviewQuestionModel interviewQuestionModel);
 

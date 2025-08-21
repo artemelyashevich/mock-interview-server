@@ -29,7 +29,7 @@ public class SmsServiceImpl implements SmsService {
         Twilio.init(accountSid, authToken);
 
         Message.creator(
-                new PhoneNumber(notification.getReceiver()),
+                new PhoneNumber(notification.getSendTo()),
                 new PhoneNumber(fromPhoneNumber),
                 notification.getContent())
             .create();

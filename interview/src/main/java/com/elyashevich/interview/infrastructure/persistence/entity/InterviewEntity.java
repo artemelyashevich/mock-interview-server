@@ -42,9 +42,8 @@ public class InterviewEntity extends AbstractEntity {
     @Column(nullable = false)
     private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "template_id")
-    private InterviewTemplateEntity template;
+    @Column(nullable = false)
+    private Long templateId;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

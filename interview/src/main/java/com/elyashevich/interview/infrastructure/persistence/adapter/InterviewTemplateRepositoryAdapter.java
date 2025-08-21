@@ -23,12 +23,12 @@ public class InterviewTemplateRepositoryAdapter implements InterviewTemplateRepo
     @Override
     public InterviewTemplateModel findById(Long id) throws ResourceNotFoundException {
         return repository.findById(id)
-            .map(MAPPER::toModel)
-            .orElseThrow(() -> {
-                String message = String.format(TEMPLATE_NOT_FOUND_MSG, id);
-                log.debug(message);
-                return new ResourceNotFoundException(message);
-            });
+                .map(MAPPER::toModel)
+                .orElseThrow(() -> {
+                    String message = String.format(TEMPLATE_NOT_FOUND_MSG, id);
+                    log.debug(message);
+                    return new ResourceNotFoundException(message);
+                });
     }
 
     @Override
@@ -58,11 +58,11 @@ public class InterviewTemplateRepositoryAdapter implements InterviewTemplateRepo
 
     @Override
     public List<InterviewTemplateModel> findAllByDifficultyAndTechnologyStackContaining(
-        String difficulty,
-        String technology
+            String difficulty,
+            String technology
     ) {
         return MAPPER.toModels(
-            repository.findAllByDifficultyAndTechnologyStackContaining(difficulty, technology)
+                repository.findAllByDifficultyAndTechnologyStackContaining(difficulty, technology)
         );
     }
 }

@@ -9,7 +9,6 @@ import lombok.NonNull;
 import lombok.ToString;
 import lombok.With;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,7 +21,7 @@ import java.util.List;
 public class InterviewTemplateModel extends AbstractModel {
 
     @EqualsAndHashCode.Include
-    private InterviewTemplateId id;
+    private Long id;
     
     @NonNull
     private String title;
@@ -42,6 +41,4 @@ public class InterviewTemplateModel extends AbstractModel {
     public boolean isAtDifficultyLevel(DifficultyLevel level) {
         return this.difficulty == level;
     }
-
-    public record InterviewTemplateId(Long value) implements Serializable {}
 }

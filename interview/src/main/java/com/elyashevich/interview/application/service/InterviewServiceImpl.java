@@ -1,6 +1,7 @@
 package com.elyashevich.interview.application.service;
 
 import com.elyashevich.interview.application.port.in.InterviewService;
+import com.elyashevich.interview.application.port.in.InterviewTemplateService;
 import com.elyashevich.interview.application.port.in.NotificationService;
 import com.elyashevich.interview.application.port.out.InterviewRepository;
 import com.elyashevich.interview.infrastructure.persistence.entity.InterviewEntity;
@@ -9,35 +10,47 @@ import com.mock.interview.lib.exception.ResourceAlreadyExistException;
 import com.mock.interview.lib.model.InterviewModel;
 import com.mock.interview.lib.model.InterviewQuestionModel;
 import com.mock.interview.lib.model.InterviewStatus;
-import com.mock.interview.lib.model.NotificationModel;
 import com.mock.interview.lib.specification.GenericSpecificationRepository;
 import com.mock.interview.lib.specification.GenericSpecificationService;
-import com.mock.interview.lib.specification.SearchCriteria;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class InterviewServiceImpl extends GenericSpecificationService<InterviewEntity, Long> implements InterviewService  {
+public class InterviewServiceImpl extends GenericSpecificationService<InterviewEntity, Long> implements InterviewService {
 
     private final InterviewRepository interviewEntityRepository;
     private final NotificationService notificationService;
+    private final InterviewTemplateService interviewTemplateService;
 
-    // TODO
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public InterviewModel create(InterviewModel interviewModel) {
         log.debug("Create Interview");
 
-        var interview = interviewEntityRepository.save(interviewModel);
-        notificationService.send(NotificationModel.builder().build());
-        return null;
+        var interviewTemplate = interviewTemplateService.findById(interviewModel.getTemplateId());
+
+        var interview = interviewEntityRepository.save(InterviewModel.builder()
+                .templateId(interviewTemplate.getId())
+                .status(InterviewStatus.IN_PROGRESS)
+                .userId(interviewModel.getUserId())
+                .build());
+
+        notificationService.sendNotificationAsync(interview);
+
+        log.debug("Created Interview");
+        return interview;
     }
 
     @Override
@@ -74,6 +87,8 @@ public class InterviewServiceImpl extends GenericSpecificationService<InterviewE
         }
 
         interview.setStatus(InterviewStatus.IN_PROGRESS);
+        interview.setStartTime(LocalDateTime.now());
+
         interviewEntityRepository.save(interview);
 
         log.debug("Interview started");
@@ -93,7 +108,11 @@ public class InterviewServiceImpl extends GenericSpecificationService<InterviewE
         }
 
         interview.setStatus(InterviewStatus.COMPLETED);
+        interview.setEndTime(LocalDateTime.now());
+
         interviewEntityRepository.save(interview);
+
+        notificationService.sendNotificationAsync(interview);
 
         log.debug("Interview completed");
         return interview;
@@ -102,9 +121,7 @@ public class InterviewServiceImpl extends GenericSpecificationService<InterviewE
     @Override
     public InterviewModel findById(Long interviewId) {
         log.debug("Attempt to find interview with id {}", interviewId);
-
         var interview = interviewEntityRepository.findById(interviewId);
-
         log.debug("Interview found");
         return interview;
     }
@@ -119,6 +136,26 @@ public class InterviewServiceImpl extends GenericSpecificationService<InterviewE
 
         interviewEntityRepository.save(interview);
         log.debug("Update Interview");
+    }
+
+    @Override
+    @Async("taskExecutor")
+    public CompletableFuture<List<InterviewModel>> batchSaveAsync(List<InterviewModel> interviews) {
+        log.debug("Batch saving {} interviews asynchronously", interviews.size());
+
+        return CompletableFuture.supplyAsync(() ->
+                interviews.stream()
+                        .map(interview -> {
+                            try {
+                                return interviewEntityRepository.save(interview);
+                            } catch (Exception e) {
+                                log.error("Failed to save interview {}: {}", interview.getId(), e.getMessage());
+                                return null;
+                            }
+                        })
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList())
+        );
     }
 
     @Override

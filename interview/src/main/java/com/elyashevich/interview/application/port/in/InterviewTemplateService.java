@@ -8,4 +8,6 @@ public interface InterviewTemplateService {
     InterviewTemplateModel create(InterviewTemplateModel interviewTemplateModel);
 
     InterviewQuestionModel clone(Long id, String newTitle);
+
+    InterviewTemplateModel findById(Long templateId);
 }

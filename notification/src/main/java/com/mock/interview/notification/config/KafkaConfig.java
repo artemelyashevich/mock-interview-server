@@ -72,6 +72,32 @@ public class KafkaConfig {
     }
 
     @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory(
+            ConsumerFactory<String, String> consumerFactory,
+            KafkaTemplate<String, String> kafkaTemplate) {
+
+        ConcurrentKafkaListenerContainerFactory<String, String> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory);
+        factory.setBatchListener(true);
+        factory.setConcurrency(4);
+
+        factory.setCommonErrorHandler(createErrorHandler(kafkaTemplate));
+
+        return factory;
+    }
+
+    private DefaultErrorHandler createErrorHandler(KafkaTemplate<String, String> kafkaTemplate) {
+        ExponentialBackOff backOff = new ExponentialBackOff(1000L, 2.0);
+        backOff.setMaxAttempts(3);
+        backOff.setMaxElapsedTime(10000L);
+
+        return new DefaultErrorHandler((record, exception) -> {
+            log.warn("All retries exhausted for record: {}", record.value());
+        }, backOff);
+    }
+
+    @Bean
     public ConsumerFactory<String, Object> orderEventConsumerFactory() {
         var props = new HashMap<String, Object>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");

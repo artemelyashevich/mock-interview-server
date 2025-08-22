@@ -1,48 +1,16 @@
 spring:
   application:
-    name: auth-service
+    name: registry
   config:
-    import: optional:file:.env[.properties]
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    password: postgres
-    username: postgres
-    url: jdbc:postgresql://localhost:5432/app
-    hikari:
-      connection-timeout: 30000
-      maximum-pool-size: 10
-      minimum-idle: 2
-      idle-timeout: 600000
-      max-lifetime: 1800000
-      auto-commit: true
-      pool-name: HikariPool-1
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    open-in-view: false
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
-            scope: openid,email,profile
-          github:
-            client-id: ${GITHUB_CLIENT_ID}
-            client-secret: ${GITHUB_CLIENT_SECRET}
-            scope: user:email
-        provider:
-          google:
-            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
-            token-uri: https://oauth2.googleapis.com/token
-            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
-
-app:
-  kafka:
-    topic:
-      name: notifications
-    transaction-id-prefix: kafka-transactions
+    import: optional:configserver:http://localhost:8888
+  cloud:
+    config:
+      uri: http://localhost:8888
+      fail-fast: true
+      retry:
+        initial-interval: 1000
+        max-interval: 2000
+        max-attempts: 6
 
 server:
   port: 8111

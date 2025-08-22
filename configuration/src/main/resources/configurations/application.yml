@@ -1,0 +1,64 @@
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: postgres
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/app
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      auto-commit: true
+      pool-name: HikariPool-1
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+logging:
+  level:
+    com.mock.interview: DEBUG
+    org.springframework.web: INFO
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      default:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        waitDurationInOpenState: 10000
+  retry:
+    instances:
+      default:
+        maxAttempts: 3
+        waitDuration: 1000
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: false
+    hostname: localhost
+
+app:
+  pagination:
+    defaultPageSize: 20
+    maxPageSize: 100
+  twilio:
+    count:
+      sid: ${TWILIO_ACCOUNT_SID}
+    auth:
+      token: ${TWILIO_AUTH_TOKEN}
+    phone:
+      number: ${TWILIO_PHONE_NUMBER}
+  kafka:
+    topic:
+      name: notifications
+    transaction-id-prefix: kafka-transactions

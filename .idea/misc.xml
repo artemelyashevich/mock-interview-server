@@ -9,6 +9,9 @@
         <option value="$PROJECT_DIR$/userProfile/pom.xml" />
         <option value="$PROJECT_DIR$/interview/pom.xml" />
         <option value="$PROJECT_DIR$/notification/pom.xml" />
+        <option value="$PROJECT_DIR$/gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/configuration/pom.xml" />
+        <option value="$PROJECT_DIR$/registry/pom.xml" />
       </list>
     </option>
   </component>

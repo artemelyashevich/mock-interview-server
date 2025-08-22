@@ -1,0 +1,20 @@
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_SENDER}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    sender:
+      email: ${MAIL_SENDER}
+  kafka:
+    consumer:
+      isolation-level: read_committed
+      enable-auto-commit: false
+    listener:
+      default-retry-template: false

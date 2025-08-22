@@ -1,26 +1,16 @@
 spring:
   application:
-    name: userProfile-service
+    name: userProfile
   config:
-    import: optional:file:.env[.properties]
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    password: postgres
-    username: postgres
-    url: jdbc:postgresql://localhost:5432/app
-    hikari:
-      connection-timeout: 30000
-      maximum-pool-size: 10
-      minimum-idle: 2
-      idle-timeout: 600000
-      max-lifetime: 1800000
-      auto-commit: true
-      pool-name: HikariPool-1
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    open-in-view: false
-
+    import: optional:configserver:http://localhost:8888
+  cloud:
+    config:
+      uri: http://localhost:8888
+      fail-fast: true
+      retry:
+        initial-interval: 1000
+        max-interval: 2000
+        max-attempts: 6
 
 server:
   port: 8113

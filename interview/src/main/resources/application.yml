@@ -1,6 +1,6 @@
 spring:
   application:
-    name: report
+    name: interview
   config:
     import: optional:configserver:http://localhost:8888
   cloud:
@@ -13,4 +13,4 @@ spring:
         max-attempts: 6
 
 server:
-  port: 8115
+  port: 8112

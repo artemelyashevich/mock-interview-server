@@ -54,7 +54,7 @@ public class ReportEntity extends AbstractEntity {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    private String createdBy;
+    private Long interviewId;
     
     @PrePersist
     protected void onCreate() {

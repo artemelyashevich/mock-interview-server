@@ -1,4 +1,4 @@
-package com.mock.interview.infrastructure.web.dto;
+package com.mock.interview.lib.dto;
 
 import com.mock.interview.lib.contract.AbstractDto;
 

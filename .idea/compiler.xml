@@ -6,15 +6,12 @@
     </excludeFromCompile>
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Annotation profile for Archetype - lib" enabled="true">
+      <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
-        </processorPath>
-        <module name="lib" />
+        <module name="configuration" />
+        <module name="registry" />
       </profile>
       <profile name="Annotation profile for notification" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -23,10 +20,11 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
+        <module name="lib" />
         <module name="notification" />
         <module name="gateway" />
       </profile>
-      <profile name="Annotation profile for userProfile" enabled="true">
+      <profile name="Annotation profile for report" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -35,16 +33,10 @@
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.6.3/mapstruct-processor-1.6.3.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.6.3/mapstruct-1.6.3.jar" />
         </processorPath>
+        <module name="report" />
         <module name="interview" />
         <module name="auth" />
         <module name="userProfile" />
-      </profile>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="configuration" />
-        <module name="registry" />
       </profile>
     </annotationProcessing>
   </component>
@@ -57,6 +49,7 @@
       <module name="lib" options="-parameters" />
       <module name="notification" options="-parameters" />
       <module name="registry" options="-parameters" />
+      <module name="report" options="-parameters" />
       <module name="userProfile" options="-parameters" />
     </option>
   </component>

@@ -3,7 +3,7 @@ package com.mock.interview.userProfile.infrastructure.web.mapper;
 import com.mock.interview.lib.model.InterviewMetadataModel;
 import com.mock.interview.lib.model.InterviewPosition;
 import com.mock.interview.lib.model.InterviewStatus;
-import com.mock.interview.userProfile.infrastructure.web.dto.InterviewMetadataDto;
+import com.mock.interview.lib.dto.InterviewMetadataDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

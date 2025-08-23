@@ -2,7 +2,7 @@ package com.mock.interview.userProfile.infrastructure.web.mapper;
 
 import com.mock.interview.lib.contract.DtoMappable;
 import com.mock.interview.lib.model.UserProfileModel;
-import com.mock.interview.userProfile.infrastructure.web.dto.UserProfileDto;
+import com.mock.interview.lib.dto.UserProfileDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.factory.Mappers;

@@ -5,7 +5,7 @@ import com.mock.interview.lib.model.UserProfileModel;
 import com.mock.interview.lib.specification.SearchCriteria;
 import com.mock.interview.userProfile.application.port.in.UserProfileService;
 import com.mock.interview.userProfile.infrastructure.persistence.mapper.UserProfileEntityMapper;
-import com.mock.interview.userProfile.infrastructure.web.dto.UserProfileDto;
+import com.mock.interview.lib.dto.UserProfileDto;
 import com.mock.interview.userProfile.infrastructure.web.mapper.UserProfileDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

@@ -1,6 +1,6 @@
 package com.mock.interview.userProfile.infrastructure.web.mapper;
 
-import com.mock.interview.userProfile.infrastructure.web.dto.UserProfileDto;
+import com.mock.interview.lib.dto.UserProfileDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

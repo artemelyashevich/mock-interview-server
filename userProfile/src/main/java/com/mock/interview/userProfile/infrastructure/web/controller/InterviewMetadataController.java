@@ -3,7 +3,7 @@ package com.mock.interview.userProfile.infrastructure.web.controller;
 import com.mock.interview.lib.exception.ExceptionBody;
 import com.mock.interview.lib.model.InterviewMetadataModel;
 import com.mock.interview.userProfile.application.port.in.InterviewMetadataService;
-import com.mock.interview.userProfile.infrastructure.web.dto.InterviewMetadataDto;
+import com.mock.interview.lib.dto.InterviewMetadataDto;
 import com.mock.interview.userProfile.infrastructure.web.mapper.InterviewMetadataDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

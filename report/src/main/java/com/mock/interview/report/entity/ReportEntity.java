@@ -43,7 +43,6 @@ public class ReportEntity extends AbstractEntity {
     @Column(nullable = false)
     private ReportFormat format;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private String status;
     

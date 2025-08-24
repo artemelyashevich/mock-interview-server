@@ -23,7 +23,7 @@ import java.util.List;
 public class InterviewModel extends AbstractModel {
 
     @EqualsAndHashCode.Include
-    private InterviewId id;
+    private Long id;
 
     private Long userId;
 
@@ -64,17 +64,5 @@ public class InterviewModel extends AbstractModel {
 
     public void addQuestion(InterviewQuestionModel question) {
         this.questions.add(question);
-    }
-
-    public record InterviewId(Long value) implements Serializable {
-    }
-
-    public record UserId(Long value) implements Serializable {
-    }
-
-    public record InterviewTemplateId(Long value) implements Serializable {
-    }
-
-    public record ReportId(Long value) implements Serializable {
     }
 }

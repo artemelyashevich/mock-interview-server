@@ -99,7 +99,7 @@ public class InterviewRepositoryAdapter implements InterviewRepository {
         Objects.requireNonNull(interviewModel, "Interview model cannot be null");
         Objects.requireNonNull(interviewModel.getId(), "Interview id cannot be null");
 
-        interviewEntityRepository.deleteById(interviewModel.getId().value());
+        interviewEntityRepository.deleteById(interviewModel.getId());
     }
 
     @Override

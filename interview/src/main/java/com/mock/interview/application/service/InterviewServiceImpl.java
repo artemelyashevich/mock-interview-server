@@ -149,7 +149,7 @@ public class InterviewServiceImpl extends GenericSpecificationService<InterviewE
     public void save(InterviewModel interviewModel) {
         log.debug("Save Interview");
 
-        var interview = findById(interviewModel.getId().value());
+        var interview = findById(interviewModel.getId());
         interview.setStatus(interviewModel.getStatus());
         interview.setOverallScore(interviewModel.getOverallScore());
 

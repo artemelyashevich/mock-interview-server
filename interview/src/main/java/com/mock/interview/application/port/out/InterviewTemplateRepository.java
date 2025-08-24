@@ -14,11 +14,4 @@ public interface InterviewTemplateRepository {
     void deleteById(Long id);
 
     List<InterviewTemplateModel> findAllByDifficulty(String difficulty);
-
-    List<InterviewTemplateModel> findAllByTechnologyStackContaining(String technology);
-
-    List<InterviewTemplateModel> findAllByDifficultyAndTechnologyStackContaining(
-        String difficulty,
-        String technology
-    );
 }

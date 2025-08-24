@@ -50,19 +50,4 @@ public class InterviewTemplateRepositoryAdapter implements InterviewTemplateRepo
     public List<InterviewTemplateModel> findAllByDifficulty(String difficulty) {
         return MAPPER.toModels(repository.findAllByDifficulty(difficulty));
     }
-
-    @Override
-    public List<InterviewTemplateModel> findAllByTechnologyStackContaining(String technology) {
-        return MAPPER.toModels(repository.findAllByTechnologyStackContaining(technology));
-    }
-
-    @Override
-    public List<InterviewTemplateModel> findAllByDifficultyAndTechnologyStackContaining(
-            String difficulty,
-            String technology
-    ) {
-        return MAPPER.toModels(
-                repository.findAllByDifficultyAndTechnologyStackContaining(difficulty, technology)
-        );
-    }
 }

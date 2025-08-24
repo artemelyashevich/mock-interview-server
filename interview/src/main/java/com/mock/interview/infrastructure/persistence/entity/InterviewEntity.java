@@ -52,7 +52,7 @@ public class InterviewEntity extends AbstractEntity {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
-    @Column(name = "overall_score", precision = 3, scale = 2)
+    @Column(name = "overall_score")
     private Double overallScore;
 
     @OneToMany(mappedBy = "interview", cascade = CascadeType.ALL, orphanRemoval = true)

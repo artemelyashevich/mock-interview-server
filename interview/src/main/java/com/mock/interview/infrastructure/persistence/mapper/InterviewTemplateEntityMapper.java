@@ -1,6 +1,6 @@
 package com.mock.interview.infrastructure.persistence.mapper;
 
-import com.elyashevich.interview.infrastructure.persistence.entity.InterviewTemplateEntity;
+import com.mock.interview.infrastructure.persistence.entity.InterviewTemplateEntity;
 import com.mock.interview.lib.contract.EntityMappable;
 import com.mock.interview.lib.model.InterviewTemplateModel;
 import org.mapstruct.Mapper;

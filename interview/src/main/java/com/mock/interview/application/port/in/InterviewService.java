@@ -1,6 +1,6 @@
 package com.mock.interview.application.port.in;
 
-import com.elyashevich.interview.infrastructure.persistence.entity.InterviewEntity;
+import com.mock.interview.infrastructure.persistence.entity.InterviewEntity;
 import com.mock.interview.lib.model.InterviewModel;
 import com.mock.interview.lib.model.InterviewQuestionModel;
 import com.mock.interview.lib.specification.SearchCriteria;

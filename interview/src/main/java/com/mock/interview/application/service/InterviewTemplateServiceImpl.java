@@ -1,7 +1,7 @@
 package com.mock.interview.application.service;
 
-import com.elyashevich.interview.application.port.in.InterviewTemplateService;
-import com.elyashevich.interview.application.port.out.InterviewTemplateRepository;
+import com.mock.interview.application.port.in.InterviewTemplateService;
+import com.mock.interview.application.port.out.InterviewTemplateRepository;
 import com.mock.interview.lib.model.InterviewQuestionModel;
 import com.mock.interview.lib.model.InterviewTemplateModel;
 import lombok.RequiredArgsConstructor;

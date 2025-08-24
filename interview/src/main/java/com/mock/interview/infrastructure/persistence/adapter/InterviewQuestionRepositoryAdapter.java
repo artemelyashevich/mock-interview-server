@@ -1,9 +1,9 @@
 package com.mock.interview.infrastructure.persistence.adapter;
 
-import com.elyashevich.interview.application.port.out.InterviewQuestionRepository;
-import com.elyashevich.interview.application.port.out.InterviewRepository;
-import com.elyashevich.interview.infrastructure.persistence.mapper.InterviewQuestionEntityMapper;
-import com.elyashevich.interview.infrastructure.persistence.repository.InterviewQuestionEntityRepository;
+import com.mock.interview.application.port.out.InterviewQuestionRepository;
+import com.mock.interview.application.port.out.InterviewRepository;
+import com.mock.interview.infrastructure.persistence.mapper.InterviewQuestionEntityMapper;
+import com.mock.interview.infrastructure.persistence.repository.InterviewQuestionEntityRepository;
 import com.mock.interview.lib.exception.ResourceNotFoundException;
 import com.mock.interview.lib.model.InterviewQuestionModel;
 import lombok.RequiredArgsConstructor;

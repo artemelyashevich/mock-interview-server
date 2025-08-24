@@ -1,8 +1,8 @@
 package com.mock.interview.infrastructure.persistence.adapter;
 
-import com.elyashevich.interview.application.port.out.InterviewRepository;
-import com.elyashevich.interview.infrastructure.persistence.mapper.InterviewEntityMapper;
-import com.elyashevich.interview.infrastructure.persistence.repository.InterviewEntityRepository;
+import com.mock.interview.application.port.out.InterviewRepository;
+import com.mock.interview.infrastructure.persistence.mapper.InterviewEntityMapper;
+import com.mock.interview.infrastructure.persistence.repository.InterviewEntityRepository;
 import com.mock.interview.lib.exception.ResourceNotFoundException;
 import com.mock.interview.lib.model.InterviewModel;
 import com.mock.interview.lib.model.InterviewStatus;
@@ -23,7 +23,6 @@ public class InterviewRepositoryAdapter implements InterviewRepository {
     private static final String INTERVIEW_NOT_FOUND_MSG = "Cannot find interview with id %d and user id %d";
 
     private final InterviewEntityRepository interviewEntityRepository;
-    private final InterviewRepository interviewRepository;
 
     @Override
     public List<InterviewModel> findAllByStatus(InterviewStatus status) {

@@ -1,18 +1,33 @@
 package com.mock.interview.lib.dto;
 
+import com.mock.interview.lib.contract.AbstractDto;
 import com.mock.interview.lib.model.ReportFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-public record CreateReportRequest(
+@Getter
+@Setter
+@Builder
+@ToString
+@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+@AllArgsConstructor
+public class CreateReportRequest extends AbstractDto {
         @NotBlank(message = "Title is required")
-        String title,
+        private String title;
 
-        String description,
+        private String description;
 
         @NotNull(message = "Format is required")
-        ReportFormat format,
+        private ReportFormat format;
 
         @NotBlank(message = "Created by field is required")
-        Long interviewId
-) {}
+        private Long interviewId;
+}

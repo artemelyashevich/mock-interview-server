@@ -1,5 +1,6 @@
 package com.mock.interview.notification.service.impl;
 
+import com.mock.interview.lib.configuration.AppProperties;
 import com.mock.interview.lib.model.NotificationModel;
 import com.mock.interview.notification.service.EmailService;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,7 @@ public class EmailServiceImpl implements EmailService {
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine templateEngine;
 
-    @Setter
-    @Value("${spring.mail.sender.email}")
-    private String senderEmail;
+    private final AppProperties appProperties;
 
     @Override
     public void send(NotificationModel notificationModel) {
@@ -44,7 +43,7 @@ public class EmailServiceImpl implements EmailService {
                 "text", notificationModel.getContent()
             ));
 
-            helper.setFrom(senderEmail);
+            helper.setFrom(appProperties.getEmail().getSender());
             helper.setTo(notificationModel.getSendTo());
             helper.setSubject(notificationModel.getRule());
 

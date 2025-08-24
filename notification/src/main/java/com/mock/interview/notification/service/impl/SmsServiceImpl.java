@@ -1,5 +1,6 @@
 package com.mock.interview.notification.service.impl;
 
+import com.mock.interview.lib.configuration.AppProperties;
 import com.mock.interview.lib.model.NotificationModel;
 import com.mock.interview.notification.service.SmsService;
 import com.twilio.Twilio;
@@ -15,22 +16,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SmsServiceImpl implements SmsService {
 
-    @Value("${twilio.account.sid}")
-    private String accountSid;
-
-    @Value("${twilio.auth.token}")
-    private String authToken;
-
-    @Value("${twilio.phone.number}")
-    private String fromPhoneNumber;
+    private final AppProperties appProperties;
 
     @Override
     public void send(NotificationModel notification) {
-        Twilio.init(accountSid, authToken);
+        Twilio.init(appProperties.getTwilio().getCount().getSid(), appProperties.getTwilio().getAuth().getToken());
 
         Message.creator(
                 new PhoneNumber(notification.getSendTo()),
-                new PhoneNumber(fromPhoneNumber),
+                new PhoneNumber(appProperties.getTwilioPhoneNumber()),
                 notification.getContent())
             .create();
 

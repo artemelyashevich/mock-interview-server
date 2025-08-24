@@ -1,10 +1,11 @@
 package com.mock.interview.application.service;
 
-import com.elyashevich.interview.application.port.in.InterviewService;
-import com.elyashevich.interview.application.port.in.InterviewTemplateService;
-import com.elyashevich.interview.application.port.in.NotificationService;
-import com.elyashevich.interview.application.port.out.InterviewRepository;
-import com.elyashevich.interview.infrastructure.persistence.entity.InterviewEntity;
+import com.mock.interview.application.port.in.InterviewService;
+import com.mock.interview.application.port.in.InterviewTemplateService;
+import com.mock.interview.application.port.in.NotificationService;
+import com.mock.interview.application.port.out.InterviewRepository;
+import com.mock.interview.infrastructure.persistence.entity.InterviewEntity;
+import com.mock.interview.infrastructure.persistence.repository.InterviewEntityRepository;
 import com.mock.interview.lib.exception.MockInterviewException;
 import com.mock.interview.lib.exception.ResourceAlreadyExistException;
 import com.mock.interview.lib.model.InterviewModel;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class InterviewServiceImpl extends GenericSpecificationService<InterviewEntity, Long> implements InterviewService {
 
-    private final InterviewRepository interviewEntityRepository;
+    private final InterviewEntityRepository interviewEntityRepository;
     private final NotificationService notificationService;
     private final InterviewTemplateService interviewTemplateService;
 

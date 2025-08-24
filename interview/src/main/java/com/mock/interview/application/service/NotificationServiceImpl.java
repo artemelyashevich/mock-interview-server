@@ -1,6 +1,7 @@
 package com.mock.interview.application.service;
 
-import com.elyashevich.interview.application.port.in.NotificationService;
+import com.mock.interview.application.port.in.NotificationService;
+import com.mock.interview.lib.configuration.AppProperties;
 import com.mock.interview.lib.model.InterviewModel;
 import com.mock.interview.lib.model.NotificationModel;
 import com.mock.interview.lib.model.NotificationType;
@@ -8,7 +9,6 @@ import com.mock.interview.lib.util.JsonHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -21,25 +21,17 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
 
-
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final BeanFactory beanFactory;
-
-    @Value("${app.kafka.topic.name}")
-    private String topicName;
+    private final AppProperties appProperties;
 
     @Override
     @Transactional(transactionManager = "kafkaTransactionManager")
     public void send(NotificationModel notificationModel) {
-        var result = kafkaTemplate.send(topicName, JsonHelper.toJson(notificationModel));
-        result
-                .completeAsync((r,v)->{
-                    return r;
-                })
-                .completeExceptionally();
+        kafkaTemplate.send(
+                appProperties.getKafkaTopicName(), JsonHelper.toJson(notificationModel));
     }
 
-    // FIXME
     @Async("taskExecutor")
     public void sendNotificationAsync(InterviewModel interview) {
         try {

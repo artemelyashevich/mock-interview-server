@@ -1,6 +1,8 @@
 package com.mock.interview.auth.infrastructure.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mock.interview.lib.configuration.AppProperties;
+import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,18 +17,20 @@ import org.springframework.kafka.transaction.KafkaTransactionManager;
 import java.util.HashMap;
 
 @Configuration
+@RequiredArgsConstructor
 public class KafkaProducerConfiguration {
+
+    private final AppProperties appProperties;
 
     @Bean
     public ProducerFactory<String, Object> producerFactory(
-            @Value("${app.kafka.transaction-id-prefix}") String transactionIdPrefix,
             ObjectMapper objectMapper
     ) {
        var configProperties = new HashMap<String, Object>();
 
         configProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         configProperties.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
-        configProperties.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, transactionIdPrefix + "-1");
+        configProperties.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, appProperties.getKafka().getTransactionIdPrefix() + "-1");
 
         var serializer = new JsonSerializer<Object>(objectMapper);
         serializer.setAddTypeInfo(false);
@@ -37,7 +41,7 @@ public class KafkaProducerConfiguration {
                 serializer
         );
 
-        factory.setTransactionIdPrefix(transactionIdPrefix);
+        factory.setTransactionIdPrefix(appProperties.getKafka().getTransactionIdPrefix());
 
         return factory;
     }

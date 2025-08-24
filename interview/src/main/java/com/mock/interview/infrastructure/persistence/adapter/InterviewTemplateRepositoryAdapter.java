@@ -1,8 +1,8 @@
 package com.mock.interview.infrastructure.persistence.adapter;
 
-import com.elyashevich.interview.application.port.out.InterviewTemplateRepository;
-import com.elyashevich.interview.infrastructure.persistence.mapper.InterviewTemplateEntityMapper;
-import com.elyashevich.interview.infrastructure.persistence.repository.InterviewTemplateEntityRepository;
+import com.mock.interview.application.port.out.InterviewTemplateRepository;
+import com.mock.interview.infrastructure.persistence.mapper.InterviewTemplateEntityMapper;
+import com.mock.interview.infrastructure.persistence.repository.InterviewTemplateEntityRepository;
 import com.mock.interview.lib.exception.ResourceNotFoundException;
 import com.mock.interview.lib.model.InterviewTemplateModel;
 import lombok.RequiredArgsConstructor;

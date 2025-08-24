@@ -62,3 +62,13 @@ app:
     topic:
       name: notifications
     transaction-id-prefix: kafka-transactions
+  report:
+    generation:
+      threads:
+        core: 5
+        max: 10
+        keepAlive: 60
+      queue:
+        capacity: 100
+      timeout:
+        seconds: 30

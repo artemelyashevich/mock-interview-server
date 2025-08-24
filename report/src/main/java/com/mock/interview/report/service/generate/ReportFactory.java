@@ -1,4 +1,4 @@
-package com.mock.interview.report.service;
+package com.mock.interview.report.service.generate;
 
 import com.mock.interview.lib.model.ReportFormat;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +12,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReportFactory {
 
-    private final List<ReportService> reportServices;
+    private final List<ReportGenerateService> reportServices;
 
-    public ReportService getReportService(ReportFormat reportFormat) {
+    public ReportGenerateService getReportService(ReportFormat reportFormat) {
         return reportServices.stream()
                 .filter(service -> service.getStatus().equals(reportFormat))
                 .findFirst()

@@ -1,6 +1,6 @@
 package com.mock.interview.infrastructure.persistence.repository;
 
-import com.elyashevich.interview.infrastructure.persistence.entity.InterviewEntity;
+import com.mock.interview.infrastructure.persistence.entity.InterviewEntity;
 import com.mock.interview.lib.model.InterviewProjection;
 import com.mock.interview.lib.model.InterviewStatus;
 import com.mock.interview.lib.specification.GenericSpecificationRepository;

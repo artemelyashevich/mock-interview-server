@@ -1,10 +1,8 @@
-package com.mock.interview.report.service.impl;
+package com.mock.interview.report.service.generate.impl;
 
-import com.mock.interview.lib.dto.CreateReportRequest;
 import com.mock.interview.lib.model.ReportFormat;
 import com.mock.interview.lib.model.ReportModel;
-import com.mock.interview.lib.model.ReportStatus;
-import com.mock.interview.report.service.ReportService;
+import com.mock.interview.report.service.generate.ReportGenerateService;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -14,13 +12,13 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
+import java.awt.Color;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Service
-public class PdfReportService implements ReportService {
+public class PdfReportService implements ReportGenerateService {
 
     private static final float MARGIN = 50;
     private static final float LINE_HEIGHT = 20;
@@ -41,8 +39,8 @@ public class PdfReportService implements ReportService {
     }
 
     @Override
-    public ReportModel generate(CreateReportRequest createReportRequest) throws IOException {
-        var fileName = "interview-report-" + createReportRequest.interviewId() + "-" +
+    public ReportModel generate(ReportModel createReportRequest) throws IOException {
+        var fileName = "interview-report-" + createReportRequest.getInterviewId() + "-" +
                 System.currentTimeMillis() + ".pdf";
         var filePath = "./reports/" + fileName;
 
@@ -70,9 +68,9 @@ public class PdfReportService implements ReportService {
                     createReportRequest, width, yPosition);
             yPosition -= LINE_HEIGHT;
 
-            if (createReportRequest.description() != null && !createReportRequest.description().isEmpty()) {
+            if (createReportRequest.getDescription() != null && !createReportRequest.getDescription().isEmpty()) {
                 yPosition = addDescriptionSection(contentStream, headingFont, bodyFont,
-                        createReportRequest.description(), width, yPosition);
+                        createReportRequest.getDescription(), width, yPosition);
                 yPosition -= LINE_HEIGHT;
             }
 
@@ -82,16 +80,7 @@ public class PdfReportService implements ReportService {
             document.save(filePath);
         }
 
-        return ReportModel.builder()
-                .generatedAt(LocalDateTime.now())
-                .format(ReportFormat.PDF)
-                .title(createReportRequest.title())
-                .description(createReportRequest.description())
-                .interviewId(createReportRequest.interviewId())
-                .filePath(filePath)
-                .status(ReportStatus.COMPLETED)
-                .createdAt(LocalDateTime.now())
-                .build();
+        return createReportRequest;
     }
 
     private void drawHeader(PDPageContentStream contentStream, float width, float height) throws IOException {
@@ -120,7 +109,7 @@ public class PdfReportService implements ReportService {
 
     private float addMetadataSection(PDPageContentStream contentStream, PDFont headingFont,
                                      PDFont bodyFont, PDFont italicFont,
-                                     CreateReportRequest request, float width, float yPosition) throws IOException {
+                                     ReportModel request, float width, float yPosition) throws IOException {
         contentStream.setFont(headingFont, HEADING_FONT_SIZE);
         contentStream.setNonStrokingColor(SECONDARY_COLOR);
         contentStream.beginText();
@@ -140,11 +129,11 @@ public class PdfReportService implements ReportService {
         contentStream.setNonStrokingColor(DARK_GRAY);
 
         addTableRow(contentStream, bodyFont, "Interview ID:",
-                request.interviewId().toString(), MARGIN, yPosition, tableWidth);
+                request.getInterviewId().toString(), MARGIN, yPosition, tableWidth);
         yPosition -= LINE_HEIGHT;
 
         addTableRow(contentStream, bodyFont, "Title:",
-                request.title(), MARGIN, yPosition, tableWidth);
+                request.getTitle(), MARGIN, yPosition, tableWidth);
         yPosition -= LINE_HEIGHT;
 
         var generatedDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));

@@ -8,7 +8,7 @@
         <version>3.5.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.elyashevich</groupId>
+    <groupId>com.mock</groupId>
     <artifactId>interview</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>interview</name>

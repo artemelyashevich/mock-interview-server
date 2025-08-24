@@ -1,7 +1,7 @@
 package com.mock.interview.infrastructure.web.controller;
 
-import com.elyashevich.interview.application.port.in.InterviewQuestionService;
-import com.elyashevich.interview.infrastructure.web.mapper.InterviewQuestionDtoMapper;
+import com.mock.interview.application.port.in.InterviewQuestionService;
+import com.mock.interview.infrastructure.web.mapper.InterviewQuestionDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

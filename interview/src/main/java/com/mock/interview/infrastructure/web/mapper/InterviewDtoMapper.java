@@ -1,7 +1,7 @@
 package com.mock.interview.infrastructure.web.mapper;
 
-import com.elyashevich.interview.infrastructure.web.dto.CreateInterviewRequest;
 import com.mock.interview.lib.contract.DtoMappable;
+import com.mock.interview.lib.dto.CreateInterviewRequest;
 import com.mock.interview.lib.model.InterviewModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

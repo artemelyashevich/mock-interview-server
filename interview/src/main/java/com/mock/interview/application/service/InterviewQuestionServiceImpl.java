@@ -1,8 +1,8 @@
 package com.mock.interview.application.service;
 
-import com.elyashevich.interview.application.port.in.InterviewQuestionService;
-import com.elyashevich.interview.application.port.in.InterviewService;
-import com.elyashevich.interview.application.port.out.InterviewQuestionRepository;
+import com.mock.interview.application.port.in.InterviewQuestionService;
+import com.mock.interview.application.port.in.InterviewService;
+import com.mock.interview.application.port.out.InterviewQuestionRepository;
 import com.mock.interview.lib.exception.ResourceNotFoundException;
 import com.mock.interview.lib.model.EvaluationModel;
 import com.mock.interview.lib.model.InterviewQuestionModel;

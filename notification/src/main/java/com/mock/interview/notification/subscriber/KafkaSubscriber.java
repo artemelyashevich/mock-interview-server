@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class KafkaSubscriber {
 
     private final NotificationHandlerService notificationHandlerService;
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @KafkaListener(
             topics = "notifications",

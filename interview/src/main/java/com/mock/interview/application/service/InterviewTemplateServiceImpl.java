@@ -6,6 +6,9 @@ import com.mock.interview.lib.model.InterviewQuestionModel;
 import com.mock.interview.lib.model.InterviewTemplateModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -16,6 +19,12 @@ public class InterviewTemplateServiceImpl implements InterviewTemplateService {
     private final InterviewTemplateRepository interviewTemplateRepository;
 
     @Override
+    @Caching(
+            put = {
+                    @CachePut(value = "InterviewTemplateService::clone", key = "#interviewTemplate.id()"),
+                    @CachePut(value = "InterviewTemplateService::findById", key = "#interviewTemplate.id()")
+            }
+    )
     public InterviewTemplateModel create(InterviewTemplateModel interviewTemplateModel) {
         log.debug("Attempting create new interview template");
 
@@ -26,11 +35,13 @@ public class InterviewTemplateServiceImpl implements InterviewTemplateService {
     }
 
     @Override
+    @Cacheable(value = "InterviewTemplateService::clone", key = "#id")
     public InterviewQuestionModel clone(Long id, String newTitle) {
         return null;
     }
 
     @Override
+    @Cacheable(value = "InterviewTemplateService::findById", key = "#templateId")
     public InterviewTemplateModel findById(Long templateId) {
         return interviewTemplateRepository.findById(templateId);
     }

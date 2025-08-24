@@ -8,6 +8,10 @@ import com.mock.interview.lib.model.EvaluationModel;
 import com.mock.interview.lib.model.InterviewQuestionModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +26,12 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    @Caching(
+            put = {
+                    @CachePut(value="InterviewQuestionService::evaluateQuestion", key = "#questionId"),
+                    @CachePut(value="InterviewQuestionService::findCurrentQuestion", key = "#interviewQuestion.getId()")
+            }
+    )
     public InterviewQuestionModel create(Long questionId, Long userId, InterviewQuestionModel interviewQuestionModel) {
         log.debug("Attempting to create interview question");
 
@@ -35,6 +45,12 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
     @Override
     @Transactional
+    @Caching(
+            put = {
+                    @CachePut(value="InterviewQuestionService::evaluateQuestion", key = "#questionId"),
+                    @CachePut(value="InterviewQuestionService::findCurrentQuestion", key = "#interviewQuestion.getId()")
+            }
+    )
     public InterviewQuestionModel saveAnswer(Long questionId, Long userId, String answer) {
         log.debug("Attempting to save interview question");
 
@@ -56,6 +72,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
     @Override
     @Transactional
+    @Cacheable(value="InterviewQuestionService::evaluateQuestion", key = "#questionId")
     public InterviewQuestionModel evaluateQuestion(Long questionId, EvaluationModel evaluation, Long evaluatorId) {
         var question = interviewQuestionRepository.findById(questionId);
 
@@ -70,6 +87,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     }
 
     @Override
+    @Cacheable(value="InterviewQuestionService::findCurrentQuestion", key = "#interviewId")
     public InterviewQuestionModel findCurrentQuestion(Long interviewId) {
         log.debug("Attempting to find current interview question");
 
@@ -77,6 +95,20 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
         log.debug("Found current interview question");
         return question;
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(allEntries = true)
+    public void delete(Long interviewId) {
+        log.debug("Attempting to delete interview question: {}", interviewId);
+
+        if (interviewQuestionRepository.findById(interviewId) == null) {
+            throw new ResourceNotFoundException("No interview question found with id: " + interviewId);
+        }
+
+        interviewQuestionRepository.deleteAllByInterviewId(interviewId);
+        log.debug("Deleted interview question");
     }
 
     private void updateInterviewOverallScore(Long interviewId) {

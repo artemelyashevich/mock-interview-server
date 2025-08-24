@@ -11,6 +11,7 @@ public interface InterviewQuestionService {
 
     InterviewQuestionModel evaluateQuestion(Long questionId, EvaluationModel evaluation, Long evaluatorId);
 
-
     InterviewQuestionModel findCurrentQuestion(Long interviewId);
+
+    void delete(Long interviewId);
 }

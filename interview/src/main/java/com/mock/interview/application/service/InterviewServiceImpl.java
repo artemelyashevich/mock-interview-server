@@ -5,7 +5,6 @@ import com.mock.interview.application.port.in.InterviewTemplateService;
 import com.mock.interview.application.port.in.NotificationService;
 import com.mock.interview.application.port.out.InterviewRepository;
 import com.mock.interview.infrastructure.persistence.entity.InterviewEntity;
-import com.mock.interview.infrastructure.persistence.repository.InterviewEntityRepository;
 import com.mock.interview.lib.exception.MockInterviewException;
 import com.mock.interview.lib.exception.ResourceAlreadyExistException;
 import com.mock.interview.lib.model.InterviewModel;
@@ -15,6 +14,9 @@ import com.mock.interview.lib.specification.GenericSpecificationRepository;
 import com.mock.interview.lib.specification.GenericSpecificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -31,12 +33,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class InterviewServiceImpl extends GenericSpecificationService<InterviewEntity, Long> implements InterviewService {
 
-    private final InterviewEntityRepository interviewEntityRepository;
+    private final InterviewRepository interviewEntityRepository;
     private final NotificationService notificationService;
     private final InterviewTemplateService interviewTemplateService;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Caching(
+            put = {
+                    @CachePut(value="InterviewService::findById", key = "#interview.id()"),
+            }
+    )
     public InterviewModel create(InterviewModel interviewModel) {
         log.debug("Create Interview");
 
@@ -56,6 +63,11 @@ public class InterviewServiceImpl extends GenericSpecificationService<InterviewE
 
     @Override
     @Transactional(propagation = Propagation.NESTED)
+    @Caching(
+            put = {
+                    @CachePut(value="InterviewService::findById", key = "#interviewId"),
+            }
+    )
     public InterviewModel addQuestion(Long interviewId, Long userId, InterviewQuestionModel interviewQuestionModel) {
         log.debug("Add Question");
 
@@ -120,6 +132,7 @@ public class InterviewServiceImpl extends GenericSpecificationService<InterviewE
     }
 
     @Override
+    @Cacheable(value="InterviewService::findById", key = "#interviewId")
     public InterviewModel findById(Long interviewId) {
         log.debug("Attempt to find interview with id {}", interviewId);
         var interview = interviewEntityRepository.findById(interviewId);
@@ -128,6 +141,11 @@ public class InterviewServiceImpl extends GenericSpecificationService<InterviewE
     }
 
     @Override
+    @Caching(
+            put = {
+                    @CachePut(value="InterviewService::findById", key = "#interviewId"),
+            }
+    )
     public void save(InterviewModel interviewModel) {
         log.debug("Save Interview");
 

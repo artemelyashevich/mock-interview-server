@@ -12,6 +12,7 @@ import com.mock.interview.lib.model.NotificationType;
 import com.mock.interview.lib.model.RoleModel;
 import com.mock.interview.lib.model.UserModel;
 import com.mock.interview.lib.model.UserOAuthProviderModel;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -57,7 +58,7 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public UserModel authenticate(Authentication authentication) {
+    public UserModel authenticate(@NonNull Authentication authentication) {
         log.debug("Attempting to authenticate User via OAuth2");
 
         var authToken = validateAuthentication(authentication);

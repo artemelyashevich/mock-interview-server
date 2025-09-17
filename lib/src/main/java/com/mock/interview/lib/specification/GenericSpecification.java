@@ -16,6 +16,15 @@ import java.util.Map;
 @UtilityClass
 public class GenericSpecification {
 
+    private static final String DOT = ".";
+    private static final String LIKE = "_like";
+    private static final String IN = "_in";
+    private static final String FROM = "_from";
+    private static final String TO = "_to";
+    private static final String NOT = "_not";
+    private static final String EQUALS = "_eq";
+    private static final String REPLACEMENT = "";
+
     public static <T> Specification<T> create(@NonNull Map<String, Object> searchCriteria) {
         return (root, query, criteriaBuilder) -> {
             var predicates = new ArrayList<Predicate>();
@@ -28,24 +37,25 @@ public class GenericSpecification {
                     continue;
                 }
 
-                if (key.contains(".")) {
+                if (key.contains(DOT)) {
                     handleNestedField(key, value, root, criteriaBuilder, predicates);
                 }
-                if (key.endsWith("_like")) {
+                if (key.endsWith(LIKE)) {
                     handleLikeOperator(key, value, root, criteriaBuilder, predicates);
                 }
-                if (key.endsWith("_in")) {
+                if (key.endsWith(IN)) {
                     handleInOperator(key, value, root, predicates);
                 }
-                if (key.endsWith("_from")) {
+                if (key.endsWith(FROM)) {
                     handleFromOperator(key, value, root, criteriaBuilder, predicates);
                 }
-                if (key.endsWith("_to")) {
+                if (key.endsWith(TO)) {
                     handleToOperator(key, value, root, criteriaBuilder, predicates);
                 }
-                if (key.endsWith("_not")) {
+                if (key.endsWith(NOT)) {
                     handleNotOperator(key, value, root, criteriaBuilder, predicates);
-                } else {
+                }
+                if (key.endsWith(EQUALS)) {
                     handleEqualsOperator(key, value, root, criteriaBuilder, predicates);
                 }
             }
@@ -66,25 +76,25 @@ public class GenericSpecification {
 
     private static <T> void handleLikeOperator(String key, Object value, Root<T> root, 
                                              CriteriaBuilder cb, List<Predicate> predicates) {
-        var fieldName = key.replace("_like", "");
+        var fieldName = key.replace(LIKE, "");
         predicates.add(cb.like(cb.lower(root.get(fieldName)), 
                              "%" + value.toString().toLowerCase() + "%"));
     }
 
     private static <T> void handleInOperator(String key, Object value, Root<T> root, 
                                             List<Predicate> predicates) {
-        var fieldName = key.replace("_in", "");
+        var fieldName = key.replace(IN, REPLACEMENT);
         if (value instanceof Collection) {
             predicates.add(root.get(fieldName).in((Collection<?>) value));
-        } else if (value instanceof Object[]) {
-            predicates.add(root.get(fieldName).in((Object[]) value));
+        } else if (value instanceof Object[] o) {
+            predicates.add(root.get(fieldName).in(o));
         }
     }
 
     @SuppressWarnings("all")
     private static <T> void handleFromOperator(String key, Object value, Root<T> root,
                                              CriteriaBuilder cb, List<Predicate> predicates) {
-        var fieldName = key.replace("_from", "");
+        var fieldName = key.replace(FROM, REPLACEMENT);
         if (value instanceof LocalDateTime) {
             predicates.add(cb.greaterThanOrEqualTo(root.get(fieldName), (LocalDateTime) value));
         } else if (value instanceof Comparable comparable) {
@@ -95,17 +105,17 @@ public class GenericSpecification {
     @SuppressWarnings("all")
     private static <T> void handleToOperator(String key, Object value, Root<T> root, 
                                            CriteriaBuilder cb, List<Predicate> predicates) {
-        var fieldName = key.replace("_to", "");
+        var fieldName = key.replace(TO, REPLACEMENT);
         if (value instanceof LocalDateTime) {
             predicates.add(cb.lessThanOrEqualTo(root.get(fieldName), (LocalDateTime) value));
-        } else if (value instanceof Comparable) {
-            predicates.add(cb.lessThanOrEqualTo(root.get(fieldName), (Comparable) value));
+        } else if (value instanceof Comparable comparable) {
+            predicates.add(cb.lessThanOrEqualTo(root.get(fieldName), comparable));
         }
     }
 
     private static <T> void handleNotOperator(String key, Object value, Root<T> root, 
                                             CriteriaBuilder cb, List<Predicate> predicates) {
-        var fieldName = key.replace("_not", "");
+        var fieldName = key.replace(NOT, REPLACEMENT);
         predicates.add(cb.notEqual(root.get(fieldName), value));
     }
 

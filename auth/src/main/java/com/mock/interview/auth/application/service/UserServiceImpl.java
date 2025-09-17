@@ -5,6 +5,7 @@ import com.mock.interview.auth.application.port.out.UserRepository;
 import com.mock.interview.lib.exception.ResourceAlreadyExistException;
 import com.mock.interview.lib.exception.ResourceNotFoundException;
 import com.mock.interview.lib.model.UserModel;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,27 +19,27 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public UserModel findById(Long id) {
+    public UserModel findById(@NonNull Long id) {
         log.debug("Attempting find user by id: {}", id);
 
         var user = userRepository.findById(id);
 
-        log.debug("User found: {}", user);
+        log.debug("User found by id: {}", user.getId());
         return user;
     }
 
     @Override
-    public UserModel findByLogin(String login) {
+    public UserModel findByLogin(@NonNull String login) {
         log.debug("Attempting find user by login: {}", login);
 
         var user = userRepository.findByLogin(login);
 
-        log.debug("User found: {}", user);
+        log.debug("User found by login: {}", user.getLogin());
         return user;
     }
 
     @Override
-    public UserModel save(UserModel user) {
+    public UserModel save(@NonNull UserModel user) {
         log.debug("Attempting to save user: {}", user);
 
         if (userRepository.existsByLogin(user.getLogin())) {
@@ -54,7 +55,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(UserModel userModel) {
+    public void delete(@NonNull UserModel userModel) {
         log.debug("Attempting to delete user: {}", userModel);
 
         if (!userRepository.existsByLogin(userModel.getLogin())) {
@@ -69,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserModel update(UserModel user) {
+    public UserModel update(@NonNull UserModel user) {
         log.debug("Attempting to update user: {}", user);
 
         var oldUser = userRepository.findById(user.getId());

@@ -1,11 +1,22 @@
 package com.mock.interview.lib.specification;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.domain.Sort;
 import java.util.HashMap;
 import java.util.Map;
 
-@Data
+@Setter
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class SearchCriteria {
     private Map<String, Object> filters = new HashMap<>();
     private Integer page = 0;

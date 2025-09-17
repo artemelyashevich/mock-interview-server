@@ -1,5 +1,6 @@
 package com.mock.interview.lib.specification;
 
+import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -12,7 +13,7 @@ public abstract class GenericSpecificationService<T, ID> {
     protected abstract GenericSpecificationRepository<T, ID> getRepository();
 
     @SuppressWarnings("unchecked")
-    public Page<T> search(SearchCriteria searchCriteria) {
+    public Page<T> search(@NonNull SearchCriteria searchCriteria) {
         var spec = (Specification<T>) GenericSpecification.create(searchCriteria.getFilters());
         
         var sort = Sort.by(
@@ -30,7 +31,7 @@ public abstract class GenericSpecificationService<T, ID> {
     }
 
     @SuppressWarnings("unchecked")
-    public List<T> searchAll(SearchCriteria searchCriteria) {
+    public List<T> searchAll(@NonNull SearchCriteria searchCriteria) {
         var spec = (Specification<T>) GenericSpecification.create(searchCriteria.getFilters());
         return getRepository().search(spec);
     }

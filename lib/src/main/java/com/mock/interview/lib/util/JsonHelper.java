@@ -2,23 +2,28 @@ package com.mock.interview.lib.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mock.interview.lib.exception.MockInterviewException;
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 
+@Slf4j
 @UtilityClass
 public class JsonHelper {
 
     private static final ObjectMapper mapper = new ObjectMapper();
+
+    private static final String FAILED = "Failed to convert object to json string: {}";
 
     public static String toBeautifulJson(Object o) {
         if (o == null) {
             return "null";
         } else {
             try {
-                String result = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(o);
-                return result;
-            } catch (Exception var3) {
+                return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(o);
+            } catch (Exception ex) {
+                log.warn(FAILED, ex.getMessage());
                 return null;
             }
         }
@@ -29,9 +34,9 @@ public class JsonHelper {
             return "null";
         } else {
             try {
-                String result = mapper.writeValueAsString(o);
-                return result;
-            } catch (Exception var3) {
+                return mapper.writeValueAsString(o);
+            } catch (Exception ex) {
+                log.warn(FAILED, ex.getMessage());
                 return null;
             }
         }
@@ -42,9 +47,9 @@ public class JsonHelper {
             return null;
         } else {
             try {
-                Object result = mapper.readValue(json, valueClass);
-                return result;
-            } catch (Exception var4) {
+                return mapper.readValue(json, valueClass);
+            } catch (Exception ex) {
+                log.warn(FAILED, ex.getMessage());
                 return null;
             }
         }

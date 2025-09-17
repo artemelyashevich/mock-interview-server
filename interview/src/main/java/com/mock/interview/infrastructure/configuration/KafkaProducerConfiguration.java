@@ -23,6 +23,30 @@ import java.util.HashMap;
 public class KafkaProducerConfiguration {
 
     @Bean
+    public KafkaTemplate<String, Object> kafkaTemplate(ProducerFactory<String, Object> producerFactory) {
+        return new KafkaTemplate<>(producerFactory);
+    }
+
+    @Bean
+    public DeadLetterPublishingRecoverer dlqRecoverer(
+            KafkaOperations<String, Object> kafkaTemplate) {
+        return new DeadLetterPublishingRecoverer(kafkaTemplate,
+                (record, ex) ->
+                        new TopicPartition(record.topic() + "-dlt", record.partition())
+        );
+    }
+
+    @Bean
+    public DefaultErrorHandler errorHandler(DeadLetterPublishingRecoverer dlqRecoverer) {
+        var backOff = new FixedBackOff(1000L, 3L);
+        DefaultErrorHandler errorHandler = new DefaultErrorHandler(dlqRecoverer, backOff);
+
+        errorHandler.addNotRetryableExceptions(IllegalArgumentException.class);
+
+        return errorHandler;
+    }
+
+    @Bean
     public ProducerFactory<String, Object> producerFactory(
             @Value("${app.kafka.transaction-id-prefix}") String transactionIdPrefix,
             ObjectMapper objectMapper
@@ -48,32 +72,8 @@ public class KafkaProducerConfiguration {
     }
 
     @Bean
-    public KafkaTemplate<String, Object> kafkaTemplate(ProducerFactory<String, Object> producerFactory) {
-        return new KafkaTemplate<>(producerFactory);
-    }
-
-    @Bean
     public KafkaTransactionManager<String, Object> kafkaTransactionManager(
             ProducerFactory<String, Object> producerFactory) {
         return new KafkaTransactionManager<>(producerFactory);
-    }
-
-    @Bean
-    public DeadLetterPublishingRecoverer dlqRecoverer(
-            KafkaOperations<String, Object> kafkaTemplate) {
-        return new DeadLetterPublishingRecoverer(kafkaTemplate,
-                (record, ex) ->
-                        new TopicPartition(record.topic() + "-dlt", record.partition())
-        );
-    }
-
-    @Bean
-    public DefaultErrorHandler errorHandler(DeadLetterPublishingRecoverer dlqRecoverer) {
-        var backOff = new FixedBackOff(1000L, 3L);
-        DefaultErrorHandler errorHandler = new DefaultErrorHandler(dlqRecoverer, backOff);
-
-        errorHandler.addNotRetryableExceptions(IllegalArgumentException.class);
-
-        return errorHandler;
     }
 }

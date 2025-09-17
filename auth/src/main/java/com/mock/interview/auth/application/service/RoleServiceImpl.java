@@ -6,6 +6,7 @@ import com.mock.interview.auth.infrastructure.persistence.mapper.RoleEntityMappe
 import com.mock.interview.lib.exception.ResourceAlreadyExistException;
 import com.mock.interview.lib.exception.ResourceNotFoundException;
 import com.mock.interview.lib.model.RoleModel;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public RoleModel findByName(String name) {
+    public RoleModel findByName(@NonNull String name) {
         log.debug("Attempting to find role by name {}", name);
 
         var role = roleRepository.findByName(name);
@@ -54,7 +55,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
-    public RoleModel save(RoleModel roleModel) {
+    public RoleModel save(@NonNull RoleModel roleModel) {
         log.debug("Attempting to save role {}", roleModel);
 
         if (roleRepository.existsByName(roleModel.getName())) {
@@ -70,7 +71,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void delete(RoleModel roleModel) {
+    public void delete(@NonNull RoleModel roleModel) {
         log.debug("Attempting to delete role {}", roleModel);
 
         if (!roleRepository.existsByName(roleModel.getName())) {

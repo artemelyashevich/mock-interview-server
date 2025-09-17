@@ -1,5 +1,6 @@
 package com.mock.interview.lib.specification;
 
+import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,11 +13,11 @@ import java.util.List;
 @NoRepositoryBean
 public interface GenericSpecificationRepository<T, ID> extends JpaRepository<T, ID>, JpaSpecificationExecutor<T> {
 
-    default Page<T> search(Specification<T> spec, Pageable pageable) {
+    default Page<T> search(@NonNull Specification<T> spec, @NonNull Pageable pageable) {
         return findAll(spec, pageable);
     }
 
-    default List<T> search(Specification<T> spec) {
+    default List<T> search(@NonNull Specification<T> spec) {
         return findAll(spec);
     }
 }

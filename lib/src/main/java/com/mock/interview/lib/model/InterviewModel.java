@@ -42,6 +42,7 @@ public class InterviewModel extends AbstractModel {
     private Double overallScore;
 
     @Builder.Default
+    @Setter
     private List<InterviewQuestionModel> questions = Collections.emptyList();
 
     private Long reportId;

@@ -4,6 +4,7 @@ import com.mock.interview.entity.InterviewEntity;
 import com.mock.interview.infrastructure.persistence.entity.InterviewEntity;
 import com.mock.interview.lib.model.InterviewModel;
 import com.mock.interview.lib.model.InterviewQuestionModel;
+import com.mock.interview.lib.model.InterviewTemplateModel;
 import com.mock.interview.lib.specification.SearchCriteria;
 import org.springframework.data.domain.Page;
 
@@ -29,4 +30,6 @@ public interface InterviewService {
     Page<InterviewEntity> search(SearchCriteria searchCriteria);
 
     List<InterviewEntity> searchAll(SearchCriteria searchCriteria);
+
+    InterviewModel findByTemplate(InterviewTemplateModel interviewTemplate);
 }

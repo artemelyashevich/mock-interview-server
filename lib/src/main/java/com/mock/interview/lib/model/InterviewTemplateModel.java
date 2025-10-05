@@ -41,4 +41,14 @@ public class InterviewTemplateModel extends AbstractModel {
     public boolean isAtDifficultyLevel(DifficultyLevel level) {
         return this.difficulty == level;
     }
+
+    public static InterviewTemplateModel of(InterviewTemplateModel model) {
+        return builder()
+                .id(model.getId())
+                .title(model.getTitle())
+                .description(model.getDescription())
+                .difficulty(model.getDifficulty())
+                .technologyStack(model.technologyStack)
+                .build();
+    }
 }

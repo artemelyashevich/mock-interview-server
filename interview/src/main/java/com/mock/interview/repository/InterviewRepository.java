@@ -91,4 +91,9 @@ public interface InterviewRepository extends GenericSpecificationRepository<Inte
         GROUP BY i.id, i.status
         """)
     List<InterviewProjection> findInterviewSummariesByUserId(@Param("userId") Long userId);
+
+    @Query("""
+            select i from InterviewEntity i where i.templateId = :templateId
+            """)
+    InterviewEntity findByTemplateId(@Param("templateId") Long id);
 }

@@ -4,8 +4,10 @@ import com.mock.interview.entity.InterviewEntity;
 import com.mock.interview.lib.contract.CommonNotificationService;
 import com.mock.interview.lib.model.InterviewModel;
 import com.mock.interview.lib.model.InterviewQuestionModel;
+import com.mock.interview.lib.model.InterviewTemplateModel;
 import com.mock.interview.lib.specification.GenericSpecificationRepository;
 import com.mock.interview.lib.specification.GenericSpecificationService;
+import com.mock.interview.mapper.InterviewEntityMapper;
 import com.mock.interview.repository.InterviewRepository;
 import com.mock.interview.service.InterviewService;
 import com.mock.interview.service.InterviewTemplateService;
@@ -28,6 +30,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class InterviewServiceImpl extends GenericSpecificationService<InterviewEntity, Long> implements InterviewService {
+
+    private static final InterviewEntityMapper mapper = InterviewEntityMapper.INSTANCE;
 
     private final InterviewRepository interviewEntityRepository;
     private final CommonNotificationService<InterviewModel> notificationService;
@@ -100,6 +104,14 @@ public class InterviewServiceImpl extends GenericSpecificationService<InterviewE
     }
 
     @Override
+    public InterviewModel findByTemplate(InterviewTemplateModel interviewTemplate) {
+        log.debug("Attempting find interview by template {}", interviewTemplate);
+
+        var interview = interviewEntityRepository.findByTemplateId(interviewTemplate.getId());
+        return mapper.toModel(interview);
+    }
+
+    @Override
     @Async("taskExecutor")
     public CompletableFuture<List<InterviewModel>> batchSaveAsync(List<InterviewModel> interviews) {
         log.debug("Batch saving {} interviews asynchronously", interviews.size());
@@ -108,7 +120,7 @@ public class InterviewServiceImpl extends GenericSpecificationService<InterviewE
                 interviews.stream()
                         .map(interview -> {
                             try {
-                                return interviewEntityRepository.save(interview);
+                                return mapper.toModel(interviewEntityRepository.save(mapper.toEntity(interview)));
                             } catch (Exception e) {
                                 log.error("Failed to save interview {}: {}", interview.getId(), e.getMessage());
                                 return null;

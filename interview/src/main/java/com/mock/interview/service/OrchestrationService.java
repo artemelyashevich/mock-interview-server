@@ -112,7 +112,7 @@ public class OrchestrationService {
                             throw new MockInterviewException(500);
                         }
                         switch (interview.getStatus()) {
-                            case EMPTY -> newQueue.offer(interview);
+                            case EMPTY, FILLED -> newQueue.offer(interview);
                             case EVALUATED -> {
                                 reportWebClientService.saveReport(ReportModel.builder()
                                         .interviewId(interview.getId())

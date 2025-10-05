@@ -5,5 +5,6 @@ public enum InterviewStatus {
     COMPLETED,
     CANCELLED,
     EVALUATED,
-    EMPTY
+    EMPTY,
+    FILLED
 }

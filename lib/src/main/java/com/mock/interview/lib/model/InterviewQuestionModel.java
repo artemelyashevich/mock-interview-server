@@ -10,7 +10,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.With;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 @With
@@ -26,7 +25,7 @@ public class InterviewQuestionModel extends AbstractModel {
     private Long id;
     
     @NonNull
-    private InterviewId interviewId;
+    private Long interviewId;
     
     @NonNull
     private String questionText;
@@ -59,6 +58,4 @@ public class InterviewQuestionModel extends AbstractModel {
     public boolean isEvaluated() {
         return evaluation != null;
     }
-
-    public record InterviewId(Long value) implements Serializable {}
 }

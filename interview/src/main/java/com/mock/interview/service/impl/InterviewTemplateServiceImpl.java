@@ -60,7 +60,18 @@ public class InterviewTemplateServiceImpl implements InterviewTemplateService {
     @Override
     @Cacheable(value = "InterviewTemplateService::findById", key = "#templateId")
     public InterviewTemplateModel findById(Long templateId) {
-        return null;
+        log.debug("Attempting find interview template by id: {}", templateId);
+
+        var interviewTemplate = interviewTemplateRepository.findById(templateId).orElseThrow(
+                () -> {
+                    var message = "Template with id: '%s' was not found".formatted(templateId);
+                    log.error(message);
+                    return new MockInterviewException(message, 400);
+                }
+        );
+
+        log.debug("Found interview template by id: {}", templateId);
+        return mapper.toModel(interviewTemplate);
     }
 
     @Override
@@ -71,7 +82,7 @@ public class InterviewTemplateServiceImpl implements InterviewTemplateService {
         });
     }
 
-    private <T> T callAsTemplate(Supplier<T> supplier) {
-        return supplier.get();
+    private <T> void callAsTemplate(Supplier<T> supplier) {
+        supplier.get();
     }
 }

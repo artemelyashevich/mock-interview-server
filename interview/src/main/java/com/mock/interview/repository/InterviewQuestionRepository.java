@@ -18,10 +18,10 @@ public interface InterviewQuestionRepository extends GenericSpecificationReposit
     List<InterviewQuestionEntity> findAllByInterviewId(@Param("interviewId") Long interviewId);
 
     @Query("""
-        SELECT q FROM InterviewQuestionEntity q 
-        WHERE q.interview.id = :interviewId 
-        AND LOWER(q.topic) LIKE LOWER(CONCAT('%', :topic, '%'))
-        """)
+            SELECT q FROM InterviewQuestionEntity q 
+            WHERE q.interview.id = :interviewId 
+            AND LOWER(q.topic) LIKE LOWER(CONCAT('%', :topic, '%'))
+            """)
     List<InterviewQuestionEntity> findAllByInterviewIdAndTopicContaining(
             @Param("interviewId") Long interviewId,
             @Param("topic") String topic
@@ -30,41 +30,41 @@ public interface InterviewQuestionRepository extends GenericSpecificationReposit
     void deleteAllByInterviewId(Long interviewId);
 
     @Query("""
-        SELECT q FROM InterviewQuestionEntity q 
-        WHERE q.interview.id = :interviewId 
-        ORDER BY q.orderIndex DESC LIMIT 1
-        """)
+            SELECT q FROM InterviewQuestionEntity q 
+            WHERE q.interview.id = :interviewId 
+            ORDER BY q.orderIndex DESC LIMIT 1
+            """)
     Optional<InterviewQuestionEntity> findLatestByInterviewId(@Param("interviewId") Long interviewId);
 
     @Query("""
-        SELECT q FROM InterviewQuestionEntity q 
-        WHERE q.interview.id = :interviewId 
-        ORDER BY q.orderIndex ASC LIMIT 1
-        """)
+            SELECT q FROM InterviewQuestionEntity q 
+            WHERE q.interview.id = :interviewId 
+            ORDER BY q.orderIndex ASC LIMIT 1
+            """)
     Optional<InterviewQuestionEntity> findNextQuestion(@Param("interviewId") Long interviewId);
 
     Long countByInterviewId(Long interviewId);
 
     @Query("""
-        SELECT COUNT(q) FROM InterviewQuestionEntity q 
-        WHERE q.interview.id = :interviewId 
-        AND q.answerText IS NOT NULL
-        """)
+            SELECT COUNT(q) FROM InterviewQuestionEntity q 
+            WHERE q.interview.id = :interviewId 
+            AND q.answerText IS NOT NULL
+            """)
     Long countAnsweredQuestionsByInterviewId(@Param("interviewId") Long interviewId);
 
     @Query("""
-        SELECT AVG(CAST(JSON_EXTRACT(q.evaluation, '$.score') AS double)) 
-        FROM InterviewQuestionEntity q 
-        WHERE q.interview.id = :interviewId 
-        AND q.evaluation IS NOT NULL
-        """)
+            SELECT AVG(CAST(JSON_EXTRACT(q.evaluation, '$.score') AS double)) 
+            FROM InterviewQuestionEntity q 
+            WHERE q.interview.id = :interviewId 
+            AND q.evaluation IS NOT NULL
+            """)
     Double calculateAverageScoreByInterviewId(@Param("interviewId") Long interviewId);
 
     @Query("""
-        SELECT q FROM InterviewQuestionEntity q 
-        WHERE q.interview.id = :interviewId 
-        ORDER BY q.orderIndex ASC
-        """)
+            SELECT q FROM InterviewQuestionEntity q 
+            WHERE q.interview.id = :interviewId 
+            ORDER BY q.orderIndex ASC
+            """)
     Page<InterviewQuestionEntity> findByInterviewIdWithPagination(
             @Param("interviewId") Long interviewId,
             Pageable pageable
@@ -72,12 +72,17 @@ public interface InterviewQuestionRepository extends GenericSpecificationReposit
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
-        SELECT q FROM InterviewQuestionEntity q 
-        WHERE q.id = :id 
-        AND q.interview.id = :interviewId
-        """)
+            SELECT q FROM InterviewQuestionEntity q 
+            WHERE q.id = :id 
+            AND q.interview.id = :interviewId
+            """)
     Optional<InterviewQuestionEntity> findByIdAndInterviewIdWithLock(
             @Param("id") Long id,
             @Param("interviewId") Long interviewId
     );
+
+    @Query("""
+            select q from InterviewQuestionEntity q where q.interview.id = :id order by q.orderIndex desc limit 1
+            """)
+    Optional<InterviewQuestionEntity> findCurrent(@Param("id") Long id);
 }

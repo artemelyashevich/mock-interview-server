@@ -35,8 +35,8 @@ public class NotificationServiceImpl implements CommonNotificationService<Interv
                     .type(NotificationType.EMAIL)
                     .content("Interview: '%s' in status: '%s'".formatted(interview.getId(), interview.getStatus()))
                     .build();
-            CompletableFuture.completedFuture(
-                    kafkaTemplate.send(appProperties.getKafkaTopicName(), JsonHelper.toJson(notification))
+            CompletableFuture.runAsync(
+                    () -> kafkaTemplate.send(appProperties.getKafkaTopicName(), JsonHelper.toJson(notification))
             );
         } catch (Exception e) {
             log.warn("Failed to send completion notification: {}", e.getMessage());

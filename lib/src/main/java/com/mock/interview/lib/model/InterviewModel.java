@@ -9,7 +9,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.With;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -45,6 +44,7 @@ public class InterviewModel extends AbstractModel {
     @Setter
     private List<InterviewQuestionModel> questions = Collections.emptyList();
 
+    @Setter
     private Long reportId;
 
     public boolean isInProgress() {

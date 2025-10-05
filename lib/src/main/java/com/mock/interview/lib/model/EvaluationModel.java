@@ -12,7 +12,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EvaluationModel implements Serializable {
+    private Long interviewId;
+    private Long questionId;
     private Double score;
-
     private String feedback;
 }

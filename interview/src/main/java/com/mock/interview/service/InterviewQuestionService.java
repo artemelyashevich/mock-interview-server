@@ -14,9 +14,9 @@ public interface InterviewQuestionService {
 
     InterviewQuestionModel create(Long questionId, Long userId, InterviewQuestionModel interviewQuestionModel);
 
-    InterviewQuestionModel saveAnswer(Long questionId, Long userId, String answer);
+    InterviewQuestionModel saveAnswer(Long questionId, String answer);
 
-    InterviewQuestionModel evaluateQuestion(Long questionId, EvaluationModel evaluation, Long evaluatorId);
+    List<EvaluationModel> evaluateQuestions(Long interviewId) throws ExecutionException, InterruptedException;
 
     InterviewQuestionModel findCurrentQuestion(Long interviewId);
 

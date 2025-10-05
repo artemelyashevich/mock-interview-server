@@ -1,5 +1,7 @@
-package com.mock.interview.service;
+package com.mock.interview.service.web;
 
+import com.mock.interview.lib.model.EvaluationModel;
+import com.mock.interview.lib.model.InterviewAnswersModel;
 import com.mock.interview.lib.model.InterviewQuestionModel;
 import com.mock.interview.lib.model.InterviewTemplateModel;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -13,4 +15,7 @@ public interface AiWebClientService {
 
     @PostMapping("/api/v1/ai/questions")
     List<InterviewQuestionModel> generateQuestions(final @RequestBody InterviewTemplateModel template);
+
+    @PostMapping("/api/v1/ai/answers")
+    List<EvaluationModel> generateAnswers(final @RequestBody InterviewAnswersModel answersModel);
 }

@@ -2,29 +2,38 @@ package com.mock.interview.service.impl;
 
 import com.mock.interview.entity.InterviewEntity;
 import com.mock.interview.lib.contract.CommonNotificationService;
+import com.mock.interview.lib.exception.MockInterviewException;
 import com.mock.interview.lib.model.InterviewModel;
-import com.mock.interview.lib.model.InterviewQuestionModel;
+import com.mock.interview.lib.model.InterviewStatus;
 import com.mock.interview.lib.model.InterviewTemplateModel;
+import com.mock.interview.lib.model.ReportFormat;
+import com.mock.interview.lib.model.ReportModel;
+import com.mock.interview.lib.model.ReportStatus;
 import com.mock.interview.lib.specification.GenericSpecificationRepository;
 import com.mock.interview.lib.specification.GenericSpecificationService;
+import com.mock.interview.lib.util.AsyncHelper;
 import com.mock.interview.mapper.InterviewEntityMapper;
 import com.mock.interview.repository.InterviewRepository;
+import com.mock.interview.service.InterviewQuestionService;
 import com.mock.interview.service.InterviewService;
 import com.mock.interview.service.InterviewTemplateService;
+import com.mock.interview.service.web.ReportWebClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @Slf4j
 @Service
@@ -36,71 +45,87 @@ public class InterviewServiceImpl extends GenericSpecificationService<InterviewE
     private final InterviewRepository interviewEntityRepository;
     private final CommonNotificationService<InterviewModel> notificationService;
     private final InterviewTemplateService interviewTemplateService;
+    private final InterviewQuestionService interviewQuestionService;
+    private final ReportWebClientService reportWebClientService;
+
+    private final BlockingQueue<InterviewModel> queue;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Caching(
             put = {
-                    @CachePut(value="InterviewService::findById", key = "#interview.id()"),
+                    @CachePut(value = "InterviewService::findById", key = "#interview.id()"),
             }
     )
     public InterviewModel create(InterviewModel interviewModel) {
         log.debug("Create Interview");
-
+        var interviewEntity = interviewEntityRepository.save(mapper.toEntity(interviewModel));
         log.debug("Created Interview");
-        return null;
+        return mapper.toModel(interviewEntity);
     }
 
     @Override
-    @Transactional(propagation = Propagation.NESTED)
+    @Transactional(propagation = Propagation.REQUIRED)
     @Caching(
             put = {
-                    @CachePut(value="InterviewService::findById", key = "#interviewId"),
+                    @CachePut(value = "InterviewService::findById", key = "#interviewId"),
             }
     )
-    public InterviewModel addQuestion(Long interviewId, Long userId, InterviewQuestionModel interviewQuestionModel) {
+    public InterviewModel addQuestions(Long interviewId, Long userId) {
         log.debug("Add Question");
-
+        var interviewEntity = findById(interviewId);
+        var interviewTemplate = interviewTemplateService.findById(interviewEntity.getTemplateId());
+        interviewQuestionService.setQuestions(interviewTemplate, interviewEntity);
+        interviewEntity.setStatus(InterviewStatus.FILLED);
+        interviewEntityRepository.save(mapper.toEntity(interviewEntity));
         log.debug("Updated Interview");
-        return null;
+        return interviewEntity;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public InterviewModel startInterview(Long interviewId, Long userId) {
         log.debug("Start interview with id {}", interviewId);
-
+        var interviewEntity = findById(interviewId);
+        if (!interviewEntity.getStatus().equals(InterviewStatus.FILLED)) {
+            throw new MockInterviewException("Interview has '%s' status!".formatted(interviewEntity.getStatus()), 400);
+        }
+        interviewEntity.setStatus(InterviewStatus.IN_PROGRESS);
         log.debug("Interview started");
-        return null;
+        return mapper.toModel(interviewEntityRepository.save(mapper.toEntity(interviewEntity)));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public InterviewModel completeInterview(Long interviewId, Long userId) {
         log.debug("Complete interview with id {}", interviewId);
-
+        var interviewEntity = findById(interviewId);
+        if (!interviewEntity.getStatus().equals(InterviewStatus.IN_PROGRESS)) {
+            throw new MockInterviewException("Interview in status: '%s'".formatted(interviewEntity.getStatus()), 500);
+        }
+        interviewEntity.setStatus(InterviewStatus.COMPLETED);
+        reportWebClientService.saveReport(ReportModel.builder()
+                .interviewId(interviewId)
+                .format(ReportFormat.PDF)
+                .build());
+        queue.add(interviewEntity);
         log.debug("Interview completed");
-        return null;
+        return mapper.toModel(interviewEntityRepository.save(mapper.toEntity(interviewEntity)));
     }
 
     @Override
-    @Cacheable(value="InterviewService::findById", key = "#interviewId")
+    @Cacheable(value = "InterviewService::findById", key = "#interviewId")
     public InterviewModel findById(Long interviewId) {
         log.debug("Attempt to find interview with id {}", interviewId);
+        var interview = interviewEntityRepository.findById(interviewId).orElseThrow(
+                () -> {
+                    var message = "Interview with id: '%s' was not found".formatted(interviewId);
+                    log.error(message);
+                    return new MockInterviewException(message, 404);
+                }
+        );
         log.debug("Interview found");
-        return null;
-    }
-
-    @Override
-    @Caching(
-            put = {
-                    @CachePut(value="InterviewService::findById", key = "#interviewId"),
-            }
-    )
-    public void save(InterviewModel interviewModel) {
-        log.debug("Save Interview");
-
-        log.debug("Update Interview");
+        return mapper.toModel(interview);
     }
 
     @Override
@@ -127,12 +152,39 @@ public class InterviewServiceImpl extends GenericSpecificationService<InterviewE
                             }
                         })
                         .filter(Objects::nonNull)
-                        .collect(Collectors.toList())
-        );
+                        .toList());
     }
 
     @Override
     protected GenericSpecificationRepository<InterviewEntity, Long> getRepository() {
         return interviewEntityRepository;
+    }
+
+    @Scheduled(cron = "0 */5 * * * *")
+    @Transactional
+    public void evaluate() {
+        if (queue.isEmpty()) {
+            return;
+        }
+        var retryQueue = new LinkedBlockingQueue<InterviewModel>();
+        while (!queue.isEmpty()) {
+            AsyncHelper.runAsync(() -> {
+                var interview = queue.poll();
+                var response = reportWebClientService.findCurrentStatus(interview.getId());
+                if (response == null) {
+                    retryQueue.add(interview);
+                }
+                if (response.getReportStatus().equals(ReportStatus.COMPLETED)) {
+                    interview.setStatus(InterviewStatus.EVALUATED);
+                    interview.setReportId(response.getReportId());
+                    var res = interviewEntityRepository.save(mapper.toEntity(interview));
+                    notificationService.send(mapper.toModel(res));
+                } else {
+                    retryQueue.add(interview);
+                }
+            });
+        }
+        queue.addAll(retryQueue);
+        retryQueue.clear();
     }
 }

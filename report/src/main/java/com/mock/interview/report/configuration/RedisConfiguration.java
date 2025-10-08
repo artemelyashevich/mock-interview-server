@@ -1,4 +1,4 @@
-package com.mock.interview.configuration;
+package com.mock.interview.report.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

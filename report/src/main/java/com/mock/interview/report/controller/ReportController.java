@@ -1,6 +1,7 @@
 package com.mock.interview.report.controller;
 
 import com.mock.interview.lib.dto.CreateReportRequest;
+import com.mock.interview.lib.model.InterviewReportStatusModel;
 import com.mock.interview.lib.model.ReportModel;
 import com.mock.interview.report.service.ReportService;
 import io.swagger.v3.oas.annotations.Parameter;

@@ -2,27 +2,34 @@ package com.mock.interview.service.impl;
 
 import com.mock.interview.entity.InterviewEntity;
 import com.mock.interview.lib.contract.CommonNotificationService;
+import com.mock.interview.lib.dto.CreateReportRequest;
 import com.mock.interview.lib.exception.MockInterviewException;
 import com.mock.interview.lib.model.InterviewModel;
+import com.mock.interview.lib.model.InterviewReportStatusModel;
 import com.mock.interview.lib.model.InterviewStatus;
 import com.mock.interview.lib.model.InterviewTemplateModel;
 import com.mock.interview.lib.model.ReportFormat;
-import com.mock.interview.lib.model.ReportModel;
 import com.mock.interview.lib.model.ReportStatus;
 import com.mock.interview.lib.specification.GenericSpecificationRepository;
 import com.mock.interview.lib.specification.GenericSpecificationService;
 import com.mock.interview.lib.util.AsyncHelper;
+import com.mock.interview.lib.util.JsonHelper;
 import com.mock.interview.mapper.InterviewEntityMapper;
 import com.mock.interview.repository.InterviewRepository;
 import com.mock.interview.service.InterviewQuestionService;
 import com.mock.interview.service.InterviewService;
 import com.mock.interview.service.InterviewTemplateService;
 import com.mock.interview.service.web.ReportWebClientService;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.core.RedisOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -41,6 +48,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class InterviewServiceImpl extends GenericSpecificationService<InterviewEntity, Long> implements InterviewService {
 
     private static final InterviewEntityMapper mapper = InterviewEntityMapper.INSTANCE;
+    private static final String KEY_PREFIX = "interview-report-%s";
 
     private final InterviewRepository interviewEntityRepository;
     private final CommonNotificationService<InterviewModel> notificationService;
@@ -49,6 +57,7 @@ public class InterviewServiceImpl extends GenericSpecificationService<InterviewE
     private final ReportWebClientService reportWebClientService;
 
     private final BlockingQueue<InterviewModel> queue;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -104,11 +113,19 @@ public class InterviewServiceImpl extends GenericSpecificationService<InterviewE
             throw new MockInterviewException("Interview in status: '%s'".formatted(interviewEntity.getStatus()), 500);
         }
         interviewEntity.setStatus(InterviewStatus.COMPLETED);
-        reportWebClientService.saveReport(ReportModel.builder()
-                .interviewId(interviewId)
-                .format(ReportFormat.PDF)
-                .build());
-        queue.add(interviewEntity);
+        AsyncHelper.runAsync(() -> {
+            reportWebClientService.saveReport(CreateReportRequest.builder()
+                    .title("Interview evaluation")
+                    .interviewId(interviewId)
+                    .format(ReportFormat.PDF)
+                    .build());
+            redisTemplate.opsForValue().set(String.format(KEY_PREFIX, interviewId), Objects.requireNonNull(JsonHelper.toJson(
+                    InterviewReportStatusModel.builder()
+                            .reportStatus(ReportStatus.PENDING)
+                            .build()
+            )));
+            queue.add(interviewEntity);
+        });
         log.debug("Interview completed");
         return mapper.toModel(interviewEntityRepository.save(mapper.toEntity(interviewEntity)));
     }
@@ -161,7 +178,6 @@ public class InterviewServiceImpl extends GenericSpecificationService<InterviewE
     }
 
     @Scheduled(cron = "0 */5 * * * *")
-    @Transactional
     public void evaluate() {
         if (queue.isEmpty()) {
             return;
@@ -170,15 +186,30 @@ public class InterviewServiceImpl extends GenericSpecificationService<InterviewE
         while (!queue.isEmpty()) {
             AsyncHelper.runAsync(() -> {
                 var interview = queue.poll();
-                var response = reportWebClientService.findCurrentStatus(interview.getId());
-                if (response == null) {
-                    retryQueue.add(interview);
+                if (interview == null) {
+                    return;
                 }
-                if (response.getReportStatus().equals(ReportStatus.COMPLETED)) {
+                var key = KEY_PREFIX.formatted(interview.getId());
+                var response = (InterviewReportStatusModel) JsonHelper.fromJson(
+                        redisTemplate.opsForValue().get(key),
+                        InterviewReportStatusModel.class);
+                if (response != null && response.getReportStatus().equals(ReportStatus.COMPLETED)) {
                     interview.setStatus(InterviewStatus.EVALUATED);
                     interview.setReportId(response.getReportId());
                     var res = interviewEntityRepository.save(mapper.toEntity(interview));
-                    notificationService.send(mapper.toModel(res));
+                    redisTemplate.execute(new SessionCallback<>() {
+                        @Override
+                        @SuppressWarnings("unchecked")
+                        public Object execute(@NonNull RedisOperations operations) throws DataAccessException {
+                            operations.multi();
+
+                            notificationService.send(mapper.toModel(res));
+                            operations.delete(key);
+
+                            operations.exec();
+                            return null;
+                        }
+                    });
                 } else {
                     retryQueue.add(interview);
                 }

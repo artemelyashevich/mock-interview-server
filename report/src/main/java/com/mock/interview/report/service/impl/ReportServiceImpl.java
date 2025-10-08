@@ -1,7 +1,10 @@
 package com.mock.interview.report.service.impl;
 
 import com.mock.interview.lib.dto.CreateReportRequest;
+import com.mock.interview.lib.model.InterviewReportStatusModel;
 import com.mock.interview.lib.model.ReportModel;
+import com.mock.interview.lib.model.ReportStatus;
+import com.mock.interview.lib.util.JsonHelper;
 import com.mock.interview.report.mapper.ReportDtoMapper;
 import com.mock.interview.report.mapper.ReportEntityMapper;
 import com.mock.interview.report.service.PersistenceService;
@@ -9,10 +12,12 @@ import com.mock.interview.report.service.ReportService;
 import com.mock.interview.report.service.generate.ReportFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service

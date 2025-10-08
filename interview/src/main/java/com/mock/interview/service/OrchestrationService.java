@@ -1,12 +1,12 @@
 package com.mock.interview.service;
 
 import com.mock.interview.lib.contract.CommonNotificationService;
+import com.mock.interview.lib.dto.CreateReportRequest;
 import com.mock.interview.lib.exception.MockInterviewException;
 import com.mock.interview.lib.model.InterviewModel;
 import com.mock.interview.lib.model.InterviewStatus;
 import com.mock.interview.lib.model.InterviewTemplateModel;
 import com.mock.interview.lib.model.ReportFormat;
-import com.mock.interview.lib.model.ReportModel;
 import com.mock.interview.lib.util.AsyncHelper;
 import com.mock.interview.service.web.ReportWebClientService;
 import jakarta.annotation.PreDestroy;
@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
@@ -39,7 +38,7 @@ public class OrchestrationService {
     private final CommonNotificationService<InterviewModel> notificationService;
     private final ReportWebClientService reportWebClientService;
 
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public InterviewModel start(InterviewTemplateModel interviewTemplateModel, Long userId) {
         log.debug("{} (step 1) --------------------", INTERVIEW_PROCESS_PREFIX);
 
@@ -96,38 +95,38 @@ public class OrchestrationService {
     }
 
     @Scheduled(cron = "0 */2 * * * ?")
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void check() {
         if (queue.isEmpty()) {
             return;
         }
         var newQueue = new ConcurrentLinkedQueue<InterviewModel>();
         while (!queue.isEmpty()) {
-            AsyncHelper.runAsync(
-                    () -> {
-                        InterviewModel interview = null;
-                        try {
-                            interview = queue.take();
-                        } catch (InterruptedException e) {
-                            throw new MockInterviewException(500);
-                        }
-                        switch (interview.getStatus()) {
-                            case EMPTY, FILLED -> newQueue.offer(interview);
-                            case EVALUATED -> {
-                                reportWebClientService.saveReport(ReportModel.builder()
-                                        .interviewId(interview.getId())
-                                        .format(ReportFormat.PDF)
-                                        .build());
-                                notificationService.send(interview);
-                            }
-                            case COMPLETED, CANCELLED -> notificationService.send(interview);
-                            default -> throw new MockInterviewException(500);
-                        }
-                    }
-            );
+            InterviewModel interview;
+            try {
+                interview = queue.take();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new MockInterviewException(500);
+            }
+            switch (interview.getStatus()) {
+                case EMPTY, FILLED -> newQueue.offer(interview);
+                case COMPLETED -> AsyncHelper.runAsync(() -> {
+                    reportWebClientService.saveReport(CreateReportRequest.builder()
+                            .title("Interview evaluation")
+                            .interviewId(interview.getId())
+                            .format(ReportFormat.PDF)
+                            .build());
+                    notificationService.send(interview);
+                });
+                case CANCELLED -> notificationService.send(interview);
+                default -> throw new MockInterviewException(500);
+            }
+            queue.addAll(newQueue);
+            if (newQueue.isEmpty()) {
+                queue.clear();
+            }
+            newQueue.clear();
         }
-        queue.addAll(newQueue);
-        newQueue.clear();
     }
 
     @PreDestroy

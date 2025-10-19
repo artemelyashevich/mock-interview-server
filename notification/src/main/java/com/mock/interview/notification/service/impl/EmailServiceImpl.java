@@ -2,11 +2,10 @@ package com.mock.interview.notification.service.impl;
 
 import com.mock.interview.lib.configuration.AppProperties;
 import com.mock.interview.lib.model.NotificationModel;
-import com.mock.interview.notification.service.EmailService;
+import com.mock.interview.lib.model.NotificationType;
+import com.mock.interview.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ import java.util.Map;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EmailServiceImpl implements EmailService {
+public class EmailServiceImpl implements NotificationService {
 
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine templateEngine;
@@ -57,5 +56,10 @@ public class EmailServiceImpl implements EmailService {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public NotificationType getNotificationType() {
+        return NotificationType.EMAIL;
     }
 }

@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
@@ -28,11 +27,10 @@ public class KafkaProducerConfiguration {
     private final AppProperties appProperties;
 
     @Bean
-    public ProducerFactory<String, Object> producerFactory(
+    public ProducerFactory<String, String> producerFactory(
             ObjectMapper objectMapper
     ) {
        var configProperties = new HashMap<String, Object>();
-
         configProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         configProperties.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
         configProperties.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, appProperties.getKafka().getTransactionIdPrefix() + "-1");

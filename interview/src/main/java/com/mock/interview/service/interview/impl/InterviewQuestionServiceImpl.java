@@ -1,4 +1,4 @@
-package com.mock.interview.service.impl;
+package com.mock.interview.service.interview.impl;
 
 import com.mock.interview.configuration.ApplicationProps;
 import com.mock.interview.lib.exception.MockInterviewException;
@@ -11,7 +11,7 @@ import com.mock.interview.lib.util.JsonHelper;
 import com.mock.interview.lib.util.RestHelper;
 import com.mock.interview.mapper.InterviewQuestionEntityMapper;
 import com.mock.interview.repository.InterviewQuestionRepository;
-import com.mock.interview.service.InterviewQuestionService;
+import com.mock.interview.service.interview.InterviewQuestionService;
 import com.mock.interview.service.web.AiWebClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

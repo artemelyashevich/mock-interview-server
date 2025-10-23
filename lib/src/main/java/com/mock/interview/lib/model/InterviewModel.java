@@ -1,5 +1,6 @@
 package com.mock.interview.lib.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mock.interview.lib.contract.AbstractModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,7 @@ import java.util.List;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Builder(toBuilder = true)
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class InterviewModel extends AbstractModel {
 
     @EqualsAndHashCode.Include

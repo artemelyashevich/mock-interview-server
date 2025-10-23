@@ -1,10 +1,10 @@
-package com.mock.interview.service.impl;
+package com.mock.interview.service.interview.impl;
 
 import com.mock.interview.lib.exception.MockInterviewException;
 import com.mock.interview.lib.model.InterviewTemplateModel;
 import com.mock.interview.mapper.InterviewTemplateEntityMapper;
 import com.mock.interview.repository.InterviewTemplateRepository;
-import com.mock.interview.service.InterviewTemplateService;
+import com.mock.interview.service.interview.InterviewTemplateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CachePut;

@@ -1,4 +1,4 @@
-package com.mock.interview.service.impl;
+package com.mock.interview.service.interview.impl;
 
 import com.mock.interview.lib.configuration.AppProperties;
 import com.mock.interview.lib.contract.CommonNotificationService;

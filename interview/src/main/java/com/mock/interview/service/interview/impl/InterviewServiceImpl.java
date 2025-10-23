@@ -1,4 +1,4 @@
-package com.mock.interview.service.impl;
+package com.mock.interview.service.interview.impl;
 
 import com.mock.interview.entity.InterviewEntity;
 import com.mock.interview.lib.contract.CommonNotificationService;
@@ -16,9 +16,9 @@ import com.mock.interview.lib.util.AsyncHelper;
 import com.mock.interview.lib.util.JsonHelper;
 import com.mock.interview.mapper.InterviewEntityMapper;
 import com.mock.interview.repository.InterviewRepository;
-import com.mock.interview.service.InterviewQuestionService;
-import com.mock.interview.service.InterviewService;
-import com.mock.interview.service.InterviewTemplateService;
+import com.mock.interview.service.interview.InterviewQuestionService;
+import com.mock.interview.service.interview.InterviewService;
+import com.mock.interview.service.interview.InterviewTemplateService;
 import com.mock.interview.service.web.ReportWebClientService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

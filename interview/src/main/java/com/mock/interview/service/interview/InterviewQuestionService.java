@@ -1,4 +1,4 @@
-package com.mock.interview.service;
+package com.mock.interview.service.interview;
 
 import com.mock.interview.lib.model.EvaluationModel;
 import com.mock.interview.lib.model.InterviewModel;

@@ -24,7 +24,7 @@
         <module name="notification" />
         <module name="gateway" />
       </profile>
-      <profile name="Annotation profile for userProfile" enabled="true">
+      <profile name="Annotation profile for interview" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -38,21 +38,22 @@
         <module name="auth" />
         <module name="userProfile" />
       </profile>
-      <profile name="Annotation profile for ws" enabled="true">
+      <profile name="Annotation profile for auth2" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.40/lombok-1.18.40.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.40/lombok-1.18.40.jar" />
         </processorPath>
         <module name="ws" />
+        <module name="auth2" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="auth" options="-parameters" />
+      <module name="auth2" options="-parameters" />
       <module name="configuration" options="-parameters" />
       <module name="gateway" options="-parameters" />
       <module name="interview" options="-parameters" />

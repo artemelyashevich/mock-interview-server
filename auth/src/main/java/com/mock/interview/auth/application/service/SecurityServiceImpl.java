@@ -12,6 +12,7 @@ import com.mock.interview.lib.model.NotificationType;
 import com.mock.interview.lib.model.RoleModel;
 import com.mock.interview.lib.model.UserModel;
 import com.mock.interview.lib.model.UserOAuthProviderModel;
+import com.mock.interview.lib.security.SecurityHelper;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,7 @@ public class SecurityServiceImpl implements SecurityService {
     private final UserOAuthProviderRepository userOAuthProviderRepository;
     private final RoleService roleService;
     private final NotificationService notificationService;
+    private final SecurityHelper securityHelper;
 
     @Override
     public UserModel findCurrentUser() {

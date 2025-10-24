@@ -1,6 +1,5 @@
 package com.mock.interview.lib.entity;
 
-import com.mock.interview.auth.infrastructure.persistence.entity.OAuthProvider;
 import com.mock.interview.lib.contract.AbstractEntity;
 import jakarta.persistence.*;
 import lombok.*;

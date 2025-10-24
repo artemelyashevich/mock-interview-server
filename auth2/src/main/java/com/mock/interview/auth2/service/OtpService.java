@@ -19,7 +19,6 @@ public class OtpService {
         if (!otpFromCache.equals(otp)) {
             throw new MockInterviewException("Otp mismatch", 401);
         }
-
     }
 
     public String createOtp(String key) {

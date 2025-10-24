@@ -13,18 +13,17 @@
         <module name="configuration" />
         <module name="registry" />
       </profile>
-      <profile name="Annotation profile for notification" enabled="true">
+      <profile name="Annotation profile for auth2" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.40/lombok-1.18.40.jar" />
         </processorPath>
-        <module name="lib" />
-        <module name="notification" />
-        <module name="gateway" />
+        <module name="ws" />
+        <module name="auth2" />
       </profile>
-      <profile name="Annotation profile for interview" enabled="true">
+      <profile name="Annotation profile for userProfile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -38,15 +37,16 @@
         <module name="auth" />
         <module name="userProfile" />
       </profile>
-      <profile name="Annotation profile for auth2" enabled="true">
+      <profile name="Annotation profile for gateway" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.40/lombok-1.18.40.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
-        <module name="ws" />
-        <module name="auth2" />
+        <module name="lib" />
+        <module name="notification" />
+        <module name="gateway" />
       </profile>
     </annotationProcessing>
   </component>

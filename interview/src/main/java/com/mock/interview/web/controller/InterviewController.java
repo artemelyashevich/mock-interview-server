@@ -4,10 +4,14 @@ import com.mock.interview.lib.annotation.Authenticated;
 import com.mock.interview.lib.dto.CreateInterviewRequest;
 import com.mock.interview.lib.model.InterviewModel;
 import com.mock.interview.service.interview.InterviewService;
-import com.mock.interview.web.controller.mapper.InterviewWebMapper;
+import com.mock.interview.web.mapper.InterviewWebMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/interviews")

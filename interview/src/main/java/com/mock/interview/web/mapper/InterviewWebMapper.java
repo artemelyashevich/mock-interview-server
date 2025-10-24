@@ -1,4 +1,4 @@
-package com.mock.interview.web.controller.mapper;
+package com.mock.interview.web.mapper;
 
 import com.mock.interview.lib.contract.DtoMappable;
 import com.mock.interview.lib.dto.CreateInterviewRequest;
